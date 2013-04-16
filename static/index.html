@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Eye Drawing</title>
+		<meta name="keywords" content="">
+		<meta name="description" content="">
+		<meta name="author" content="">
+
+		<link rel="stylesheet" type="text/css" href="css/main.css">
+		<link rel="stylesheet" href="css/smoothness/jquery-ui-1.10.2.custom.css">
+
+		<script type="text/javascript" src="js/jquery-1.9.1.js"></script>
+		<script type="text/javascript" src="js/processing-1.4.1.js"></script>
+		<script type="text/javascript" src="js/jquery-ui-1.10.2.custom.js"></script>
+		<script type="text/javascript" src="js/ocanvas-2.4.0.js"></script>
+
+
+    	<script type="text/javascript" src="js/sylvester.src.js"></script>
+    	<script type="text/javascript" src="js/raphael.js"></script>
+    	<script type="text/javascript" src="js/kalman.js"></script>
+
+	</head>
+	<body>
+
+
+		<div class="main">
+			<div class="dataArea fl">
+				<img id="sourceImg" src=""/>
+				<canvas id="canvas" width="200" height="200"></canvas>
+			</div>
+			<div class="dataChart fl">
+<!--
+				<canvas id="datacanvas" width="200" height="200"></canvas>
+
+				<h3 id="title"></h3>
+				<p id="fixationT">Fixation: 2.3s</p>
+			-->
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="timeline">
+			<div class="lines normal">
+				<ul>
+
+				</ul>
+				<div class="overlay-box">
+					<div id="midControl-l" class="midcontrol left fl"></div>
+					<div id="midControl" class="midcontrol mid fl"></div>
+					<div id="midControl-r" class="midcontrol left fl"></div>
+				</div>
+				
+				<div id="leftControl" class="control br5 left"></div>
+				<div id="rightControl" class="control br5 right"></div>
+			</div>
+
+			<div class="zoom lines">
+				<ul>
+
+				</ul>
+			</div>
+			<div id="slider-range" ></div>
+		</div>
+		
+
+
+		<script type="text/javascript" src="js/main.js"></script>
+		<script type="text/javascript" src="js/controller.js"></script>
+
+		<script type="text/javascript" src="js/kalman3.js"></script>
+
+	</body>
+</html>
