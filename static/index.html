@@ -29,36 +29,61 @@
 				<canvas id="canvas" width="200" height="200"></canvas>
 			</div>
 			<div class="dataChart fl">
-<!--
-				<canvas id="datacanvas" width="200" height="200"></canvas>
 
-				<h3 id="title"></h3>
-				<p id="fixationT">Fixation: 2.3s</p>
-			-->
+
+				<h3 id="title">Experiment 7 - Standard</h3>
+
+				<div class="data-fix">
+					<p id="totalT">Total Time: <span></span></p>
+					<p id="fixationT">Fixation Time: <span></span></p>
+					<p id="saccadeT">Saccade Time: <span></span></p>
+					<p id="frameN">Frame Number: <span></span></p>
+				</div>
+				
+				<div class="data-dyn">
+					<p id="segmentN">Segment Number: <span></span></p>
+					<p id="segmentD">Segment Duration: <span></span></p>
+				</div>
+
+
+				<div class="legend">
+					<ul>
+						<li><p class="fix"><span></span>Fixation</p></li>
+						<li><p class="sac"><span></span>Saccade</p></li>
+						<li><p class="red"><span></span>Out View</p></li>
+					</ul>
+				</div>
 			</div>
 			<div class="clear"></div>
 		</div>
 		<div class="timeline">
-			<div class="lines normal">
-				<ul>
 
-				</ul>
+			<div class="zoom lines">
+				<ul></ul>
+				
+			</div>
+
+			<div class="lines normal">
+				<ul></ul>
 				<div class="overlay-box">
 					<div id="midControl-l" class="midcontrol left fl"></div>
 					<div id="midControl" class="midcontrol mid fl"></div>
 					<div id="midControl-r" class="midcontrol left fl"></div>
+					<div class="clear"></div>
 				</div>
 				
 				<div id="leftControl" class="control br5 left"></div>
 				<div id="rightControl" class="control br5 right"></div>
 			</div>
 
-			<div class="zoom lines">
-				<ul>
-
-				</ul>
+			<div class="timeData">
+				<p class="first">00:00</p>
+				<p class="last">20:00</p>
 			</div>
-			<div id="slider-range" ></div>
+			
+			<div class="frameTip">
+				<p>hello world!</p>
+			</div>
 		</div>
 		
 

@@ -36,7 +36,6 @@ $("#sourceImg").load(function() {
 
 	getData();
 
-	//calculation();
 
 }); 
 
@@ -58,7 +57,7 @@ var myData = function( type, duration, frame, p1, p2, p3, p4){
 
 	this.endX = p3;
 	this.endY = p4;
-
+	this.isIn = true;
 }
 
 
@@ -119,52 +118,51 @@ function getData(){
 
         });
 		
-		kalman(newData);
+		//kalman(newData);
+		getIsIn();
+		calculation();
 
 		//console.log(newData);
 		//createLines();
 
 		var control = new Controller();
 		control.initLines(newData);
-		//drawData();
-		$( "#slider-range" ).slider({
-			range: true,
-			min: 0,
-			max: newData[newData.length - 1].frame,
-			values: [ 0, 10 ],
-			step: 1,
-			change: function( event, ui ) {
-				
-				canvas.reset();
-				drawData(ui.values[ 0 ],ui.values[ 1 ]);
-
-			}
-		});
+		
 
     });
 }
 
 
+// check if points are in view
+function getIsIn(){
+
+	for(var i = 0; i<newData.length; i++){
+
+		if(newData[i].type == 1){
+
+			if( !isIn(newData[i].startX, newData[i].startY) )
+				newData[i].isIn = false;
+		}
+		else if(newData[i].type == 2){
+
+			if( !( isIn(newData[i].startX, newData[i].startY) && isIn(newData[i].endX, newData[i].endY) ) )
+				newData[i].isIn = false;
+		}
+	}
+
+}
+function isIn(x,y){
+
+	if( x<0 || x>picWidth || y<0 || y>picHeight )
+		return false;
+	return true;
+}
+
+
+
+
 function calculation(){
 
-
-	$("#datacanvas").attr("width", "300px");
-	$("#datacanvas").attr("height", picHeight*0.8);
-
-	var canvas = oCanvas.create({
-		canvas: "#datacanvas"
-	});
-
-	// add title
-	var text = canvas.display.text({
-		x: 20,
-		y: 20,
-		origin: { x: "left", y: "top" },
-		font: "30px HelveticaNeue-UltraLight",
-		text: title,
-		fill: "#aaa"
-	});
-	canvas.addChild(text);
 
 	// add fix and sac chart
 	var fixTime = 0,
@@ -178,25 +176,12 @@ function calculation(){
 	}
 	saccadeTime = totalTime - fixTime;
 
+	var frameNum = newData[newData.length-1].frame;
 
-	for( i = 0; i<3; i++){
-
-
-		var rectangle = canvas.display.rectangle({
-			x: 77,
-			y: 77,
-			width: 100,
-			height: 30,
-			fill: "hsl(195, "+ (100 - i*10) +"%, "+ (50 - i*10) +"%)"
-		});
-
-		canvas.addChild(rectangle);
-	}
-
-
-
-	
-
+	$("#totalT span").html(totalTime.toFixed(2) + " s");
+	$("#fixationT span").html(fixTime.toFixed(2) + " s");
+	$("#saccadeT span").html(saccadeTime.toFixed(2) + " s");
+	$("#frameN span").html(frameNum + "&nbsp;&nbsp;&nbsp;");
 	
 }
 
@@ -204,70 +189,3 @@ function calculation(){
 
 
 
-
-
-
-
-var sectionTime = 0;
-function drawData(a, b){
-
-	sectionTime = 0;
-	console.log(a,b)
-
-	var startPoint = 0,
-		endPoint = 0;
-
-	for(var i = 0; i< newData.length; i++){
-
-		if(newData[i].frame > a && startPoint == 0)
-			startPoint = i;
-		if(newData[i].frame > b && endPoint == 0)
-			endPoint = i;
-
-		if(startPoint && endPoint)
-			break;
-	}
-
-
-	for(var i = startPoint; i<endPoint; i++){
-
-		if(newData[i].type == 2){
-
-			var line = canvas.display.line({
-				start: { x: newData[i].startX, y: newData[i].startY },
-				end: { x: newData[i].endX, y: newData[i].endY },
-				stroke: "3px #00bfff",
-				cap: "round"
-			});
-
-			canvas.addChild(line);
-/*
-			ctx.moveTo(newData[i].startX, newData[i].startY);
-			ctx.lineTo(newData[i].endX, newData[i].endY);
-			ctx.stroke();
-			*/
-
-		}
-		else if(newData[i].type == 1){
-
-        	var ellipse = canvas.display.ellipse({
-				x: newData[i].startX,
-				y: newData[i].startY,
-				radius: 5,
-				fill: "#00bfff"
-			});
-
-			canvas.addChild(ellipse);
-/*
-			ctx.beginPath();
-			ctx.arc(newData[i].startX,newData[i].startY,5,0,2*Math.PI);
-			ctx.stroke();
-*/
-		}	
-		sectionTime += newData[i].duration;
-
-	}
-	console.log(sectionTime)
-	
-
-}

@@ -78,30 +78,56 @@ body{
 
 .lines{
 	width: 100%;
-	height: 20px;
+	height: 24px;
 	border-left: 1px solid #ddd;
-	margin-bottom: 10px;
+	margin-bottom: 5px;
+	position: relative;
+}
+.lines.normal{
+	height: 10px;
+	margin-bottom: 5px;
+}
+.lines.zoom{
+
+}
+.lines.zoom ul{
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+.lines.zoom ul li:hover{
+	cursor: pointer;
 }
 .lines ul{
 	display: block;
-	float: left;
+	height: 100%;
+	width: 100%;
 }
 .lines ul li{
 	float: left;
 	width: 10px;
-	height: 20px;
+	height: 100%;
 	border-right: 1px solid #4cd1ff;
 }
 .lines ul li.fix{
-	background: #00bdff;
+	background: #0ec2fe;
 }
 .lines ul li.sac{
-	background: #7fdeff;
+	background: #008fbf;
+}
+.lines ul li.red{
+	background: #f35243;
+}
+
+.lines .overlay-box{
+	width:100%;
+	height: 100%;
+	position: absolute;
+	left: 0;
+	top: 0;
 }
 .lines .midcontrol{
-	height: 20px;
-	cursor:move;
-	
+	height: 100%;
 }
 .lines .midcontrol.left{
 	width: 0;
@@ -113,36 +139,121 @@ body{
 }
 .lines .midcontrol.mid{
 	width: 200px;
+	cursor:move;
 }
+
 .lines .control{
 	position: absolute;
 	left: 100px;
 	top: -2px;
-	width: 10px;
-	height: 24px;
+	width: 20px;
+	height: 14px;
 	border: 1px solid #ddd;
 	background: #fff;
 	cursor: pointer;
 }
 .lines .control.left{
-	left: -5px;
+	left: -10px;
 }
 .lines .control.right{
-	left: 195px;
+	left: 190px;
 }
-.lines .overlay-box{
-	width:100%;
-	height: 100%;
-	position: absolute;
-	left: 0;
-	top: 0;
-}
+
 
 .dataChart{
 	width: 300px;
 	height: 100%;
 	margin-left: 20px;
 }
-.dataChart p{
-	font: 20px HelveticaNeue-UltraLight, "Helvetica-Neue", "Arial", sans-serif !important;
+.dataChart h3{
+	color: #ccc;
+	font-size: 20px;
+	line-height: 50px;
+	border-bottom: 1px solid #ddd;
+	margin-bottom: 10px;
 }
+.dataChart p{
+	font: 16px HelveticaNeue-UltraLight, "Helvetica-Neue", "Arial", sans-serif !important;
+	height: 24px;
+	color: #999;
+
+}
+.dataChart p span{
+	float: right;
+	color: #666;
+}
+.data-fix{
+	
+	padding: 20px 0 20px 0;
+	border-bottom: 1px solid #ddd;
+}
+.data-dyn{
+	padding: 20px 0 20px 0;
+}
+.legend{
+
+	border: 1px solid #ddd;
+	padding: 15px;
+}
+.legend ul li p{
+	font-size: 14px;
+}
+.legend ul li p span{
+	float: left;
+	width: 14px;
+	height: 14px;
+	display: inline-block;
+	margin: 3px 10px 0 0;
+}
+.legend ul li p.fix{
+	color: #0ec2fe;
+}
+.legend ul li p.fix span{
+	background: #0ec2fe;
+}
+.legend ul li p.sac{
+	color: #008fbf;
+}
+.legend ul li p.sac span{
+	background: #008fbf;
+}
+.legend ul li p.red{
+	color: #f35243;
+}
+.legend ul li p.red span{
+	background: #f35243;
+}
+
+
+
+
+.timeline .timeData{
+	width: 100%;
+	height: 14px;
+	font-size: 14px;
+	line-height: 14px;
+	color: #ccc;
+	position: relative;
+}
+.timeline .timeData p{
+	position: absolute;
+	top: 0;
+}
+.timeline .timeData p.first{
+	left: 5px;
+}
+.timeline .timeData p.last{
+	right: 20px;
+}
+.frameTip{
+	position: absolute;
+	width: 300px;
+	height: 100px;
+	background: rgba(0,0,0,0.8);
+	top: -100px;
+	display: none;
+}
+
+
+
+
