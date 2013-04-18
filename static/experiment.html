@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Eye Drawing</title>
+		<meta name="keywords" content="">
+		<meta name="description" content="">
+		<meta name="author" content="">
+
+		<link rel="stylesheet" type="text/css" href="css/main.css">
+		<script type="text/javascript" src="js/jquery-1.9.1.js"></script>
+		<script type="text/javascript" src="js/ocanvas-2.4.0.js"></script>
+
+
+    	<script type="text/javascript" src="js/sylvester.src.js"></script>
+    	<script type="text/javascript" src="js/raphael.js"></script>
+    	<script type="text/javascript" src="js/kalman.js"></script>
+
+	</head>
+	<body>
+
+
+		<div class="main">
+			<div class="dataArea fl">
+				<img id="sourceImg" src=""/>
+				<canvas id="canvas" width="200" height="200"></canvas>
+			</div>
+			<div class="dataChart fl">
+
+
+				<h3 id="title">Experiment 7 - Standard</h3>
+
+				<div class="data-fix">
+					<p id="totalT">Total Time: <span></span></p>
+					<!--
+					<p id="fixationT">Fixation Time: <span></span></p>
+					<p id="saccadeT">Saccade Time: <span></span></p>
+				-->
+					<p id="frameN">Frame Number: <span></span></p>
+				</div>
+				
+				<div class="data-dyn">
+					<p id="segmentN">Segment Number: <span></span></p>
+					<p id="segmentD">Segment Duration: <span></span></p>
+					<p id="startF">Start Frame: <span></span></p>
+					<p id="endF">End Frame: <span></span></p>
+				</div>
+
+
+				<div class="legend">
+					<ul>
+						<li><p ><span class="rect"></span> <span class="perc">Per.</span><span class="num">Total</span><span class="avg">Avg.</span></p></li>
+						<li><p class="fix"><span class="rect"></span>Fixation <span class="perc"></span><span class="num"></span><span class="avg"></span></p></li>
+						<li><p class="sac"><span class="rect"></span>Saccade <span class="perc"></span><span class="num"></span><span class="avg"></span></p></li>
+						<li><p class="red"><span class="rect"></span>Out View <span class="perc"></span><span class="num"></span><span class="avg"></span></p></li>
+					</ul>
+				</div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="timeline">
+
+			<div class="zoom lines">
+				<ul></ul>
+				
+			</div>
+
+			<div class="lines normal">
+				<ul></ul>
+				<div class="overlay-box">
+					<div id="midControl-l" class="midcontrol left fl"></div>
+					<div id="midControl" class="midcontrol mid fl"></div>
+					<div id="midControl-r" class="midcontrol left fl"></div>
+					<div class="clear"></div>
+				</div>
+				
+				<div id="leftControl" class="control br5 left"></div>
+				<div id="rightControl" class="control br5 right"></div>
+			</div>
+
+			<div class="timeData">
+				<p class="first">00:00</p>
+				<p class="last">20:00</p>
+			</div>
+			
+			<div class="frameTip">
+				<p>hello world!</p>
+			</div>
+		</div>
+		
+
+
+		<script type="text/javascript" src="js/main.js"></script>
+		<script type="text/javascript" src="js/controller.js"></script>
+
+		<script type="text/javascript" src="js/kalman3.js"></script>
+
+	</body>
+</html>

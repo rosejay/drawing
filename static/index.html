@@ -1,97 +1,44 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Eye Drawing</title>
-		<meta name="keywords" content="">
-		<meta name="description" content="">
-		<meta name="author" content="">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Visualization of an Eye Tracker Experiment</title>
+		<meta name="description" content="Visualization of an Eye Tracker Experiment">
+		<meta name="generator" content="">
+		<meta name="author" content="Ye Lin">
 
-		<link rel="stylesheet" type="text/css" href="css/main.css">
-		<link rel="stylesheet" href="css/smoothness/jquery-ui-1.10.2.custom.css">
+		<!-- CSS -->
+		<link rel="stylesheet" type="text/css" href="css/site.css">
 
+		<!-- Javascript Lib -->
 		<script type="text/javascript" src="js/jquery-1.9.1.js"></script>
-		<script type="text/javascript" src="js/processing-1.4.1.js"></script>
-		<script type="text/javascript" src="js/jquery-ui-1.10.2.custom.js"></script>
-		<script type="text/javascript" src="js/ocanvas-2.4.0.js"></script>
-
-
-    	<script type="text/javascript" src="js/sylvester.src.js"></script>
-    	<script type="text/javascript" src="js/raphael.js"></script>
-    	<script type="text/javascript" src="js/kalman.js"></script>
-
+		<script type="text/javascript" src="/js/lib/arbor.js"></script>
+		<script type="text/javascript" src="/js/lib/arbor-tween.js"></script>
+		<script type="text/javascript" src="/js/lib/arbor-graphics.js"></script>
 	</head>
 	<body>
-
-
-		<div class="main">
-			<div class="dataArea fl">
-				<img id="sourceImg" src=""/>
-				<canvas id="canvas" width="200" height="200"></canvas>
+		<div id="arbor">
+			<div id="nav">
+				<a class="back" href="#"></a>
+				<p style="opacity: 1; display: block;">Eye Tracker Experiment</p>
 			</div>
-			<div class="dataChart fl">
+			<canvas id="sitemap" width="1242" height="357" style="opacity: 1;" class=""></canvas>
 
-
-				<h3 id="title">Experiment 7 - Standard</h3>
-
-				<div class="data-fix">
-					<p id="totalT">Total Time: <span></span></p>
-					<p id="fixationT">Fixation Time: <span></span></p>
-					<p id="saccadeT">Saccade Time: <span></span></p>
-					<p id="frameN">Frame Number: <span></span></p>
+			<div id="docs" style="opacity: 0; display: none;">
+				<div id="introduction">
+					<h2>about arbor</h2>
 				</div>
-				
-				<div class="data-dyn">
-					<p id="segmentN">Segment Number: <span></span></p>
-					<p id="segmentD">Segment Duration: <span></span></p>
+				<div id="reference">
+					<h1>ParticleSystem</h1>
 				</div>
-
-
-				<div class="legend">
-					<ul>
-						<li><p class="fix"><span></span>Fixation</p></li>
-						<li><p class="sac"><span></span>Saccade</p></li>
-						<li><p class="red"><span></span>Out View</p></li>
-					</ul>
-				</div>
-			</div>
-			<div class="clear"></div>
-		</div>
-		<div class="timeline">
-
-			<div class="zoom lines">
-				<ul></ul>
-				
-			</div>
-
-			<div class="lines normal">
-				<ul></ul>
-				<div class="overlay-box">
-					<div id="midControl-l" class="midcontrol left fl"></div>
-					<div id="midControl" class="midcontrol mid fl"></div>
-					<div id="midControl-r" class="midcontrol left fl"></div>
-					<div class="clear"></div>
-				</div>
-				
-				<div id="leftControl" class="control br5 left"></div>
-				<div id="rightControl" class="control br5 right"></div>
-			</div>
-
-			<div class="timeData">
-				<p class="first">00:00</p>
-				<p class="last">20:00</p>
-			</div>
-			
-			<div class="frameTip">
-				<p>hello world!</p>
 			</div>
 		</div>
+
+
 		
 
+		<script src="js/site.js"></script>
 
-		<script type="text/javascript" src="js/main.js"></script>
-		<script type="text/javascript" src="js/controller.js"></script>
-
-		<script type="text/javascript" src="js/kalman3.js"></script>
 
 	</body>
 </html>

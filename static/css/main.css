@@ -117,6 +117,7 @@ body{
 }
 .lines ul li.red{
 	background: #f35243;
+	border-right: 1px solid #ff9c93;
 }
 
 .lines .overlay-box{
@@ -131,11 +132,11 @@ body{
 }
 .lines .midcontrol.left{
 	width: 0;
-	background: rgba(255,255,255,0.6);
+	background: rgba(255,255,255,0.7);
 }
 .lines .midcontrol.right{
 	width: 800px;
-	background: rgba(255,255,255,0.6);
+	background: rgba(255,255,255,0.7);
 }
 .lines .midcontrol.mid{
 	width: 200px;
@@ -161,7 +162,7 @@ body{
 
 
 .dataChart{
-	width: 300px;
+	width: 400px;
 	height: 100%;
 	margin-left: 20px;
 }
@@ -198,29 +199,40 @@ body{
 .legend ul li p{
 	font-size: 14px;
 }
-.legend ul li p span{
+.legend ul li p span.num,
+.legend ul li p span.avg,
+.legend ul li p span.perc{
+	float: right;
+	margin-left: 10px;
+	width: 60px;
+	text-align: right;
+}
+.legend ul li p span.rect{
 	float: left;
 	width: 14px;
 	height: 14px;
 	display: inline-block;
 	margin: 3px 10px 0 0;
 }
-.legend ul li p.fix{
+.legend ul li p.fix,
+.legend ul li p.fix span{
 	color: #0ec2fe;
 }
-.legend ul li p.fix span{
+.legend ul li p.fix span.rect{
 	background: #0ec2fe;
 }
-.legend ul li p.sac{
+.legend ul li p.sac,
+.legend ul li p.sac span{
 	color: #008fbf;
 }
-.legend ul li p.sac span{
+.legend ul li p.sac span.rect{
 	background: #008fbf;
 }
-.legend ul li p.red{
+.legend ul li p.red,
+.legend ul li p.red span{
 	color: #f35243;
 }
-.legend ul li p.red span{
+.legend ul li p.red span.rect{
 	background: #f35243;
 }
 
@@ -243,7 +255,7 @@ body{
 	left: 5px;
 }
 .timeline .timeData p.last{
-	right: 20px;
+	right: 5px;
 }
 .frameTip{
 	position: absolute;

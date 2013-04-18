@@ -1,6 +1,6 @@
 
 
-var title = "output";
+var title = "output-3";
 var txtFile = title + ".txt";
 var imgFile = title + ".jpg";
 
@@ -159,30 +159,45 @@ function isIn(x,y){
 }
 
 
-
-
-function calculation(){
-
-
 	// add fix and sac chart
 	var fixTime = 0,
 		totalTime = 0,
 		saccadeTime = 0;
+	var fixNum = 0,
+		sacNum = 0;
+
+		
+
+function calculation(){
+
+
+	
 
 	for(var i = 0; i< newData.length; i++){
-		if(newData[i].type == 1)
+		if(newData[i].type == 1){
 			fixTime += newData[i].duration;
+			fixNum ++;
+		}
 		totalTime += newData[i].duration;
 	}
 	saccadeTime = totalTime - fixTime;
+	sacNum = newData.length - fixNum;
 
+	var sacAvg = saccadeTime / sacNum;
+	var fixAvg = fixTime / fixNum;
 	var frameNum = newData[newData.length-1].frame;
 
 	$("#totalT span").html(totalTime.toFixed(2) + " s");
-	$("#fixationT span").html(fixTime.toFixed(2) + " s");
-	$("#saccadeT span").html(saccadeTime.toFixed(2) + " s");
 	$("#frameN span").html(frameNum + "&nbsp;&nbsp;&nbsp;");
+
+	$(".legend ul li p.fix span.num").html(fixTime.toFixed(2) + " s");
+	$(".legend ul li p.sac span.num").html(saccadeTime.toFixed(2) + " s");
+
+	$(".legend ul li p.fix span.avg").html(fixAvg.toFixed(2) + " s");
+	$(".legend ul li p.sac span.avg").html(sacAvg.toFixed(2) + " s");
 	
+	$(".legend ul li p.fix span.perc").html((fixTime/totalTime).toFixed(2) + " %");
+	$(".legend ul li p.sac span.perc").html((saccadeTime/totalTime).toFixed(2) + " %");
 }
 
 

@@ -2,6 +2,14 @@
 var winwidth = window.innerWidth,	// windows width
 	winheight = window.innerHeight;	// windows height
 
+var fixColor = "#0ec2fe",
+	sacColor = "#008fbf",
+	redColor = "#f35343";
+
+$.getJSON( "trial.json", function() {
+  console.log( "success" );
+})
+
 // class marker
 var Controller = function(  ){
 
@@ -111,6 +119,12 @@ Controller.prototype.update = function() {
 	this.draw();
 }
 
+Controller.prototype.updateZoomLines = function(){
+	
+	var zoom = this.width / (this.rightX - this.leftX);
+	$(".lines.zoom ul").css("width", this.width * zoom).css("left", (-this.leftX*zoom)+"px");
+}
+
 Controller.prototype.check = function() {
 
 	// right
@@ -136,7 +150,8 @@ Controller.prototype.initLines = function(data){
 
 	var n = data[data.length-1].frame;
 	var count = 0;
-
+	var outTime = 0;
+	var outNum = 0;
 	for(var i = 0; i<n; i++){
 
 		if(i >= data[count+1].frame){
@@ -151,16 +166,23 @@ Controller.prototype.initLines = function(data){
 
 				if( data[count].isIn )
 					$li.addClass("fix");
-				else
+				else{
 					$li.addClass("red");
+					outTime += data[count].duration;
+					outNum ++;
+				}
 
 			}
 			else{
 
 				if( data[count].isIn )
 					$li.addClass("sac");
-				else
+				else{
 					$li.addClass("red");
+					outTime += data[count].duration;
+					outNum ++;
+				}
+					
 			}
 
 			$(".lines ul").append($li);
@@ -183,6 +205,9 @@ Controller.prototype.initLines = function(data){
 	);
 	
 
+	$(".legend ul li p.red span.num").html(outTime.toFixed(2) + " s");
+	$(".legend ul li p.red span.avg").html((outTime/outNum).toFixed(2) + " s");
+	$(".legend ul li p.red span.perc").html((outTime/totalTime).toFixed(2) + " %");
 }
 Controller.prototype.isIn = function(x,y){
 
@@ -191,24 +216,10 @@ Controller.prototype.isIn = function(x,y){
 	return true;
 
 }
-Controller.prototype.updateZoomLines = function(){
-	
-	if(this.rightX - this.leftX != 0){
 
-		var zoom = this.width / (this.rightX - this.leftX);
-		var self = this;
-
-		$(".lines.zoom ul").css("width", this.width * zoom).css("left", (-this.leftX*zoom)+"px");
-		
-		
-
-	}
-		
-
-}
 
 Controller.prototype.draw = function(a,b){
-	console.log("draw")
+
 	canvas.reset();
 
 	var a = parseInt(this.leftX * this.max / this.width);
@@ -216,19 +227,29 @@ Controller.prototype.draw = function(a,b){
 
 	var segmentNum = 0;
 	var segmentTime = 0;
-
+	var startFrame = 0;
+	var endFrame = 0;
 	for(var i = 0; i< newData.length; i++){
 
 		if(newData[i].frame >= a && newData[i].frame <= b){
 
 			segmentNum ++;
+
+			if(!startFrame)
+				startFrame = newData[i].frame;
+			endFrame = newData[i].frame;
 			// draw
 			if(newData[i].type == 2){
+
+				if(newData[i].isIn)
+					color = sacColor;
+				else
+					color = redColor;
 
 				var line = canvas.display.line({
 					start: { x: newData[i].startX, y: newData[i].startY },
 					end: { x: newData[i].endX, y: newData[i].endY },
-					stroke: "5px #008fbf",
+					stroke: "5px " + color,
 					cap: "round"
 				});
 				canvas.addChild(line);
@@ -237,7 +258,7 @@ Controller.prototype.draw = function(a,b){
 					x: newData[i].startX,
 					y: newData[i].startY,
 					radius: 8,
-					fill: "#0ec2fe"
+					fill:color
 				});
 				canvas.addChild(ellipse);
 
@@ -245,7 +266,7 @@ Controller.prototype.draw = function(a,b){
 					x: newData[i].endX,
 					y: newData[i].endY,
 					radius: 8,
-					fill: "#0ec2fe"
+					fill: color
 				});
 
 				canvas.addChild(ellipse);
@@ -253,11 +274,16 @@ Controller.prototype.draw = function(a,b){
 			}
 			else if(newData[i].type == 1){
 
+				if(newData[i].isIn)
+					color = fixColor;
+				else
+					color = redColor;
+
 	        	var ellipse = canvas.display.ellipse({
 					x: newData[i].startX,
 					y: newData[i].startY,
 					radius: 8,
-					fill: "#0ec2fe"
+					fill: color
 				});
 
 				canvas.addChild(ellipse);
@@ -274,7 +300,8 @@ Controller.prototype.draw = function(a,b){
 
 	$("#segmentN span").html(segmentNum + "&nbsp;&nbsp;&nbsp;");
 	$("#segmentD span").html(segmentTime.toFixed(2) + " s");
-
+	$("#startF span").html(startFrame + "&nbsp;&nbsp;&nbsp;");
+	$("#endF span").html(endFrame + "&nbsp;&nbsp;&nbsp;");
 
 }
 
