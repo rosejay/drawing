@@ -2,38 +2,64 @@
 var winwidth = window.innerWidth,	// windows width
 	winheight = window.innerHeight;	// windows height
 
-var fixColor = "#0ec2fe",
-	sacColor = "#008fbf",
-	redColor = "#f35343";
+var controlWidth = 1000 ;
+var fixColor = "#81c6e0",
+	sacColor = "#587391",
+	redColor = "#e87461";
 
-$.getJSON( "trial.json", function() {
-  console.log( "success" );
-})
+
 
 // class marker
-var Controller = function(  ){
+var Controller = function( data, result, tester, experiment ){
+
+	// Frame
+	this.isFrame = true;
+	this.curFrame = 0;
+	this.segDiv = 0;
+	this.frameWidth = 270;
+	this.frameMax = 50;
+	this.isMoveFrame = false;
+
+	this.isFix = true;
+	this.isSac = true;
+	this.isOut = true;
+
+	this.data = data;
+	this.result = result;
+	this.tester = tester;
+	this.experiment = experiment;
 
 	this.isMoveLeft = false;
 	this.isMoveRight = false;
 	this.isMoveMid = false;
 	this.leftX = 0;
-	this.rightX = 200;
+	this.rightX = 20;
 
 	this.mouseX = 0;
 	this.tempX = 0;
 	this.tempWidth = 0;
 	// ui
-	this.width = winwidth;
-	this.controlWidth = 20;
-	this.max = newData[newData.length - 1].frame;
+	this.width = controlWidth;
+	this.controlWidth = 10;
+	this.max = this.data[this.data.length - 1].frame;
+	this.smallZoomRatio = this.max / this.width;
+	this.bigZoomRatio = 0;
 
-	this.total = 0;
-	for(var i = 0; i<newData.length; i++){
-		this.total += newData[i].duration;
-	}
-	$(".timeData .last").html(this.total.toFixed(2));
-	$(".timeline").css("width", winwidth + "px");
+	this.currentPos = 0;
+	this.playLength = 10;
 
+	this.sacColor = "#587391";
+	this.fixColor = "#81c6e0";
+	this.outColor = "#e87461";
+	this.bgColor = "#f5f4f0";
+
+	this.playInterval;
+
+
+	this.init();
+	this.initShape();
+	this.initLines();
+	this.initFrame();
 	this.update();
 
 	var self = this;
@@ -62,6 +88,10 @@ var Controller = function(  ){
 		self.tempX = self.leftX;
 		self.tempWidth = self.rightX - self.leftX;
 	})
+	$("body").mousedown(function(e){
+
+		window.clearInterval(self.playInterval);
+	})
 
 	$("body").mousemove(function(e){
 
@@ -84,6 +114,14 @@ var Controller = function(  ){
 			self.update();
 
 		}
+		if(self.isMoveFrame){
+			self.adjustFrame(e.pageX - self.tempX);
+			self.getRightX();
+
+			self.check();
+			self.update();
+		}
+
 			
 	});
 	$("body").mouseup(function(e){
@@ -97,18 +135,174 @@ var Controller = function(  ){
 		if(self.isMoveMid){
 			self.isMoveMid = false;
 		}
+		if(self.isMoveFrame)
+			self.isMoveFrame = false;
 
 		self.mouseX = 0;
 		self.tempX = 0;
 		self.tempWidth = 0;
 	});
 
+	$(".play").click(function(){
+		
+		if($(this).hasClass("stop")){
+			// stop
+			$(this).removeClass("stop");
+			window.clearInterval(self.playInterval);
+		}
+		else{
+			// play
+			$(this).addClass("stop");
+			self.play();
+		}
+		
+	})
+
+	$(".slot .slider").mousedown(function(e){
+
+		if(self.isFrame){
+			e.preventDefault();
+			
+			self.isMoveFrame = true;
+			self.mouseX = e.pageX;
+			self.tempX = $(".slot").offset().left;
+		}
+	})
+
+	$(".playBar .FrameControl .checkFrame").click(function(e){
+		e.preventDefault();
+		if($(this).hasClass("dis")){
+			$(this).removeClass("dis");
+			$(".playBar .FrameControl .checkFrameDiv").removeClass("dis");
+			self.isFrame = true;
+		}
+		else{
+			$(this).addClass("dis");
+			$(".playBar .FrameControl .checkFrameDiv").addClass("dis");
+			self.isFrame = false;
+		}
+
+	})
+}
+Controller.prototype.init = function() {
+
+	this.result.ui();
+
 }
 
+Controller.prototype.initShape = function() {
 
+	for(var i = 0; i< this.data.length; i++){
+
+		// draw
+		if(this.data[i].type == 2){
+
+			if(this.data[i].isIn)
+				color = sacColor;
+			else
+				color = redColor;
+
+			var line = canvas.display.line({
+				start: { x: this.data[i].startX, y: this.data[i].startY },
+				end: { x: this.data[i].endX, y: this.data[i].endY },
+				stroke: "5px " + color,
+				cap: "round"
+			});
+			this.data[i].shape.push(line);
+
+			var rotation = Math.atan((this.data[i].startY - this.data[i].endY) / (this.data[i].startX - this.data[i].endX)) /(Math.PI/180);
+			
+			if(this.data[i].startX - this.data[i].endX < 0)
+				rotation += 360;
+			else if(this.data[i].startY - this.data[i].endY < 0)
+				rotation += 180;
+			else 
+				rotation += 180;
+
+			var triangle = canvas.display.polygon({
+				x: this.data[i].endX,
+				y: this.data[i].endY,
+				sides: 3,
+				radius: 8,
+				rotation: rotation,
+				fill: color
+			});
+			this.data[i].shape.push(triangle);
+
+			triangle.bind("mouseenter touchenter", function () {
+				this.radius = this.radius + 3;
+				canvas.redraw();
+			}).bind("mouseleave touchleave", function () {
+				this.radius = this.radius - 3;
+				canvas.redraw();
+			}).bind("click tap", function () {
+				
+			});
+
+			/*
+			var ellipse = canvas.display.ellipse({
+				x: this.data[i].startX,
+				y: this.data[i].startY,
+				radius: 8,
+				fill:color
+			});
+			this.data[i].shape.push(ellipse);
+
+			var ellipse = canvas.display.ellipse({
+				x: this.data[i].endX,
+				y: this.data[i].endY,
+				radius: 8,
+				fill: color
+			});
+			this.data[i].shape.push(ellipse);
+*/
+		}
+		else if(this.data[i].type == 1){
+
+			if(this.data[i].isIn)
+				color = fixColor;
+			else
+				color = redColor;
+
+			var radius = parseInt(this.data[i].duration * 50);
+        	var ellipse = canvas.display.ellipse({
+				x: this.data[i].startX,
+				y: this.data[i].startY,
+				radius: radius,
+				fill: color
+			});
+        	this.data[i].shape.push(ellipse);
+
+        	ellipse.bind("mouseenter touchenter", function () {
+				this.radius = this.radius + 3;
+				canvas.redraw();
+			}).bind("mouseleave touchleave", function () {
+				this.radius = this.radius - 3;
+				canvas.redraw();
+			}).bind("click tap", function () {
+				
+			});
+/*
+			ellipse.bind("mouseenter touchenter", function () {
+				this.radius = 10;
+				canvas.redraw();
+			}).bind("mouseleave touchleave", function () {
+				this.radius = 8;
+				canvas.redraw();
+			}).bind("click tap", function () {
+				
+			});
+*/
+		}	
+		
+	}
+
+}
 Controller.prototype.update = function() {
 
-	//console.log("l:"+ this.leftX + "  r:" + this.rightX)
+	
+
+	// console.log("l:"+ this.leftX + "  r:" + this.rightX)
 	$("#leftControl").css("left", (this.leftX-this.controlWidth/2) + "px");
 	$("#rightControl").css("left", (this.rightX-this.controlWidth/2) + "px");
 
@@ -118,68 +312,195 @@ Controller.prototype.update = function() {
 	this.updateZoomLines();
 	this.draw();
 }
+Controller.prototype.getNum = function(item){
 
+	var time = item * this.result.totalTime / this.width;
+	return this.getTime(time);
+}
+Controller.prototype.getTime = function(item){
+
+	var minute = parseInt(item/60);
+	var second = parseInt(item%60);
+	var misecond = parseInt( (item - parseInt(item)) * 60 );
+
+	if(minute < 10)
+		minute = "0" + minute;
+	if(second < 10)
+		second = "0" + second;
+	if(misecond < 10)
+		misecond = "0" +  misecond;
+
+	return minute + ":" + second + ":" + misecond;
+}
+Controller.prototype.binarySearch = function(n){
+
+	var low = 0; 
+	var high = this.data.length-1; 
+	if(n<=this.data[0].frame)
+		return 0;
+	else
+		while(low <= high) { 
+			var middle = Math.floor((low + high)/2); 
+			if(middle == 0){
+				return 1;
+			}
+			if(n > this.data[middle-1].frame && n <= this.data[middle].frame) { 
+				return middle; 
+			}else if(n <this.data[middle].frame) { 
+				high = middle - 1; 
+			}else { 
+				low = middle + 1; 
+			} 
+	　　}
+}
 Controller.prototype.updateZoomLines = function(){
 	
-	var zoom = this.width / (this.rightX - this.leftX);
-	$(".lines.zoom ul").css("width", this.width * zoom).css("left", (-this.leftX*zoom)+"px");
+	$(".lines ul").html("");
+
+	var startFrame = parseInt(this.smallZoomRatio * this.leftX);
+	var endFrame = parseInt(this.smallZoomRatio * this.rightX);
+	var frames = endFrame - startFrame;
+
+
+	var startN = this.binarySearch(startFrame);
+	var endN = this.binarySearch(endFrame);
+
+	this.bigZoomRatio = (this.width - (endN - startN + 1)) / frames;
+	var prevFrame = startFrame;
+	for(var i = startN; i<endN+1; i++){
+
+		var width = (this.data[i].frame - prevFrame)*this.bigZoomRatio;
+		if(i == endN)
+			var width = (endFrame - prevFrame)*this.bigZoomRatio;
+
+		var $li = $("<li index='"+i+"'></li>").css("width",width+"px");
+
+		if(this.data[i].type == 1){
+
+			if( this.data[i].isIn )
+				$li.addClass("fix");
+			else{
+				$li.addClass("red");
+			}
+		}
+		else{
+
+			if( this.data[i].isIn )
+				$li.addClass("sac");
+			else{
+				$li.addClass("red");
+			}
+		}
+
+		prevFrame = this.data[i].frame;
+
+		$(".lines ul").append($li);
+
+	}
+
+	
+
 }
 
 Controller.prototype.check = function() {
 
-	// right
-	if(this.rightX > this.width)
-		this.rightX = this.width;
-	else if(this.rightX < this.leftX + 20)
-		this.rightX = this.leftX + 20;
-	
 	// left
 	if(this.leftX < 0)
 		this.leftX = 0;
-	else if(this.leftX >= this.rightX - 20)
-		this.leftX = this.rightX - 20;
-
-	// mid
-	if(this.rightX < this.leftX + this.tempWidth)
+	
+	// right
+	if(this.rightX > this.width)
+		this.rightX = this.width;
+	else if(this.rightX < this.leftX + this.tempWidth)
 		this.rightX = this.leftX + this.tempWidth;
+	
 	if(this.leftX > this.rightX - this.tempWidth)
 		this.leftX = this.rightX - this.tempWidth
 }
 
-Controller.prototype.initLines = function(data){
+Controller.prototype.initLines = function(){
 
-	var n = data[data.length-1].frame;
+	var self = this;
+	var n = this.data[this.data.length-1].frame;
 	var count = 0;
 	var outTime = 0;
 	var outNum = 0;
+
+	var c=document.getElementById("smallCanvas");
+	c.width = this.max;
+	c.height = 10;
+	var ctx=c.getContext("2d");
+
+	var prevFrame = 0;
+	for(var i = 0; i<this.data.length; i++){
+
+		var width = this.data[i].frame - prevFrame;
+
+		// set color
+		if(this.data[i].isIn){
+			if(this.data[i].type == 1)
+				ctx.fillStyle=this.fixColor;
+			else if(this.data[i].type == 2)
+				ctx.fillStyle = this.sacColor;
+		}
+		else
+			ctx.fillStyle = this.outColor;
+		
+
+		ctx.fillRect(prevFrame,0,width,10);
+		prevFrame = this.data[i].frame;
+	}
+	
+	$("#smallCanvas").css("width", this.width + "px");
+	$("#smallCanvas").css("height", "10px");
+
+
+
+
+
+
+
+	/*
 	for(var i = 0; i<n; i++){
 
-		if(i >= data[count+1].frame){
+		if(i >= this.data[count+1].frame){
 			count ++;
 
-			var width = (data[count].frame - data[count-1].frame)/n * this.width - 1;
+			var width = (this.data[count].frame - this.data[count-1].frame)/n * this.width - 1;
 			var ratio = width / this.width * 100;
-			var $li = $("<li></li>").css("width",ratio+"%");
+			var $li = $("<li index='"+(count-1)+"'></li>").css("width",ratio+"%");
 
+			$li.hover(
+				function () {
+					var t = $(this).attr("index");
+					self.data[t].shape[0].radius += 3;
+					self.update();
+				},
+				function () {
+					var t = $(this).attr("index");
+					self.data[t].shape[0].radius -= 3;
+					self.update();
+				}
+			);
 
-			if(data[count].type == 1){
+			if(this.data[count-1].type == 1){
 
-				if( data[count].isIn )
+				if( this.data[count-1].isIn )
 					$li.addClass("fix");
 				else{
 					$li.addClass("red");
-					outTime += data[count].duration;
+					outTime += this.data[count-1].duration;
 					outNum ++;
 				}
 
 			}
 			else{
 
-				if( data[count].isIn )
+				if( this.data[count-1].isIn )
 					$li.addClass("sac");
 				else{
 					$li.addClass("red");
-					outTime += data[count].duration;
+					outTime += this.data[count-1].duration;
 					outNum ++;
 				}
 					
@@ -195,7 +516,6 @@ Controller.prototype.initLines = function(data){
 			var x = $(this).offset().left;
 			if(x<0)
 				x = 0;
-			console.log(x)
 			$(".frameTip").css("display", "block")
 						  .css("left", x + "px");
 		},
@@ -203,107 +523,200 @@ Controller.prototype.initLines = function(data){
 			$(".frameTip").css("display", "none");
 		}
 	);
+	*/
+}
+Controller.prototype.getRightX = function() {
+
+	var startFrame = parseInt(this.smallZoomRatio * this.leftX);
+	var startN = this.binarySearch(startFrame);
+	var endN = startN + this.curFrame - 1;
+	this.rightX = this.data[endN].frame / this.smallZoomRatio;
+}
+Controller.prototype.play = function() {
+
+	this.result.ui();
+	var div = 1/this.smallZoomRatio;
+	window.clearInterval(this.playInterval);
+	var self = this;
+
+	this.playInterval = setInterval(function(){
+
+		if(self.isFrame){
+			self.leftX += div;
+			self.getRightX();
+		}
+		else{ // by time
+			self.leftX += div;
+			self.rightX += div;
+		}
+		self.check();
+		self.update();
+
+		if(self.rightX>=self.width)
+			window.clearInterval(self.playInterval);
+
+	},1000/30);
+
+}
+Controller.prototype.initFrame = function(){
+
+
+	this.segDiv = this.frameWidth/this.frameMax;
+
+	this.countFrame(this.leftX, this.rightX);
+}
+Controller.prototype.countFrame = function(start, end){
+
+	this.curFrame = end - start + 1;
+}
+Controller.prototype.setFrame = function(){
+
+	this.framePos = this.curFrame * this.segDiv;
+	$(".slot .slider").css("left", this.framePos + "px");
+	$(".checkFrameDiv .c").html(this.curFrame).css("left", this.framePos - 10 + "px")
+}
+Controller.prototype.adjustFrame = function(x){
+
+	if(x >= 0 && x<= this.frameWidth){
+		this.curFrame = parseInt(x/this.segDiv);
+		this.framePos = this.curFrame * this.segDiv;
+	}
+	else if(x<0){
+		this.curFrame = 0;
+		this.framePos = 0;
+	}
+	else if(x>this.frameWidth){
+		this.curFrame = this.frameMax;
+		this.framePos = this.frameWidth;
+	}
 	
 
-	$(".legend ul li p.red span.num").html(outTime.toFixed(2) + " s");
-	$(".legend ul li p.red span.avg").html((outTime/outNum).toFixed(2) + " s");
-	$(".legend ul li p.red span.perc").html((outTime/totalTime).toFixed(2) + " %");
+	$(".slot .slider").css("left", this.framePos + "px");
+	$(".checkFrameDiv .c").html(this.curFrame).css("left", this.framePos - 10 + "px")
 }
-Controller.prototype.isIn = function(x,y){
+Controller.prototype.draw = function(){
 
-	if( x<0 || x>picWidth || y<0 || y>picHeight )
-		return false;
-	return true;
+	
+	if(this.isFrame){
 
-}
+		var a = parseInt(this.leftX * this.max / this.width);
+		var startN = this.binarySearch(a);
+		var endN = startN + this.curFrame - 1;
+	}
+	else{
+		var a = parseInt(this.leftX * this.smallZoomRatio);
+		var b = parseInt(this.rightX * this.smallZoomRatio);
+		var startN = this.binarySearch(a);
+		var endN = this.binarySearch(b);
+	}
 
-
-Controller.prototype.draw = function(a,b){
-
-	canvas.reset();
-
-	var a = parseInt(this.leftX * this.max / this.width);
-	var b = parseInt(this.rightX * this.max / this.width);
-
-	var segmentNum = 0;
-	var segmentTime = 0;
+	var FrameNum = 0;
+	var FrameTime = 0;
 	var startFrame = 0;
 	var endFrame = 0;
-	for(var i = 0; i< newData.length; i++){
+	var isStart = false;
 
-		if(newData[i].frame >= a && newData[i].frame <= b){
-
-			segmentNum ++;
-
-			if(!startFrame)
-				startFrame = newData[i].frame;
-			endFrame = newData[i].frame;
-			// draw
-			if(newData[i].type == 2){
-
-				if(newData[i].isIn)
-					color = sacColor;
-				else
-					color = redColor;
-
-				var line = canvas.display.line({
-					start: { x: newData[i].startX, y: newData[i].startY },
-					end: { x: newData[i].endX, y: newData[i].endY },
-					stroke: "5px " + color,
-					cap: "round"
-				});
-				canvas.addChild(line);
-
-				var ellipse = canvas.display.ellipse({
-					x: newData[i].startX,
-					y: newData[i].startY,
-					radius: 8,
-					fill:color
-				});
-				canvas.addChild(ellipse);
-
-				var ellipse = canvas.display.ellipse({
-					x: newData[i].endX,
-					y: newData[i].endY,
-					radius: 8,
-					fill: color
-				});
-
-				canvas.addChild(ellipse);
-
-			}
-			else if(newData[i].type == 1){
-
-				if(newData[i].isIn)
-					color = fixColor;
-				else
-					color = redColor;
-
-	        	var ellipse = canvas.display.ellipse({
-					x: newData[i].startX,
-					y: newData[i].startY,
-					radius: 8,
-					fill: color
-				});
-
-				canvas.addChild(ellipse);
-
-			}	
-			segmentTime += newData[i].duration;
+	this.countFrame(startN, endN);
+	this.setFrame();
+	canvas.reset();
+	for(var i = startN; i< endN; i++){
 
 
+		FrameNum ++;
+
+		if(!isStart){
+			startFrame = this.data[i].frame;
+			isStart = true;
 		}
+		endFrame = this.data[i].frame;
+		// draw
+		if( (!this.data[i].isIn && this.isOut) || 
+			(this.isFix && this.data[i].type == 1) || (this.isSac && this.data[i].type == 2) )
 
+			for(var n = 0; n<this.data[i].shape.length; n++){
+				canvas.addChild(this.data[i].shape[n]);
 
+				/*
+				this.data[i].shape[n].bind("mouseenter touchenter", function () {
+					this.radius = 10;
+					canvas.redraw();
+				}).bind("mouseleave touchleave", function () {
+					this.radius = 8;
+					canvas.redraw();
+				}).bind("click tap", function () {
+					
+				});
+*/
+			}
+
+		FrameTime += this.data[i].duration;
 
 	}
 
-	$("#segmentN span").html(segmentNum + "&nbsp;&nbsp;&nbsp;");
-	$("#segmentD span").html(segmentTime.toFixed(2) + " s");
-	$("#startF span").html(startFrame + "&nbsp;&nbsp;&nbsp;");
-	$("#endF span").html(endFrame + "&nbsp;&nbsp;&nbsp;");
+	// update time
+	var leftTime = this.getNum(this.leftX);
+	var rightTime = this.getNum(this.rightX);
+
+	$(".timeData.up .first").html(leftTime);
+	$(".timeData.up .last").html(rightTime);
+
+	$(".up.first-frame").html(startFrame);
+	$(".up.last-frame").html(endFrame);
+	$(".timeData.up .center span").html(this.getNum(this.rightX - this.leftX));
+
+	//$("#FrameN span").html(FrameNum + "&nbsp;&nbsp;&nbsp;");
+	//$("#FrameD span").html(FrameTime.toFixed(2) + " s");
 
 }
+
+
+
+
+$(".mylegend ul li .rect ").click(function(){
+
+
+	if($(this).hasClass("fix")){
+		control.isFix = !control.isFix;
+		if(control.isFix){
+			$(this).html("<em></em><span>Fixation</span>");
+			$(this).parent().css("opacity", 1);
+		}
+		else{
+			$(this).html("<span>Fixation</span>");
+			$(this).parent().css("opacity", 0.5);
+		}
+	}
+	else if($(this).hasClass("sac")){
+		control.isSac = !control.isSac;
+		if(control.isSac){
+			$(this).html("<em></em><span>Saccade</span>");
+			$(this).parent().css("opacity", 1);
+		}
+		else{
+			$(this).html("<span>Saccade</span>");
+			$(this).parent().css("opacity", 0.5);
+		}
+	}
+	else if($(this).hasClass("red")){
+		control.isOut = !control.isOut;
+		if(control.isOut){
+			$(this).html("<em></em><span>Out View</span>");
+			$(this).parent().css("opacity", 1);
+		}
+		else{
+			$(this).html("<span>Out View</span>");
+			$(this).parent().css("opacity", 0.5);
+		}
+	}
+
+	control.update();
+
+})
+
+
+
+
+
 
 
 

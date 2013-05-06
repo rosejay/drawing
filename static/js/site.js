@@ -153,7 +153,7 @@
                  window.status = ''
               }
             //}else 
-            if ($.inArray(nearest.node.name, ['Eye Tracker Experiment','Tester 1','Tester 2','Tester 3',
+            if ($.inArray(nearest.node.name, ['Eye Tracker Experiment','Tester 0','Tester 1','Tester 2','Tester 3',
                           'Tester 4', 'Tester 5','Tester 6', 'Tester 7','Tester 8']) >=0 ){
               if (nearest.node.name!=_section){
                 _section = nearest.node.name
@@ -174,7 +174,20 @@
             if (nearest && selected && nearest.node===selected.node){
               var link = selected.node.data.link
               if (link.match(/^#/)){
-                 $(that).trigger({type:"navigate", path:link.substr(1)})
+                 
+                 var arr = link.split("-");
+                 if(link.substr(1,6) == "tester"){
+                  tester = arr[1];
+                 }
+                 else if(link.substr(1,10) == "experiment"){
+                   tester = arr[1];
+                   experiment = arr[2];
+                   newPage(tester, experiment);
+                 }
+                  console.log(arr[0].substr(1))
+
+                 $(that).trigger({type:"navigate", path:arr[0].substr(1)})
+
               }else{
                  window.location = link
               }
@@ -311,8 +324,9 @@
           document.title = "arbor.js"
           break
           
-          case 'introduction':
-          case 'reference':
+          case 'overall':
+          case 'tester':
+          case 'experiment':
           $(that).trigger({type:'mode', mode:'hidden', dt:dt})
           dom.find('> p').text(_path)
           dom.find('> a').addClass('active').attr('href','#')
@@ -341,45 +355,54 @@ var CLR = {
 var testerNum = 8;
 var trialNum = 3;
   
-  
+var tester = 0;
+var experiment = 0;
+
+
+
 var theUI = {"nodes": 
-  {"Eye Tracker Experiment":{"color":"#f0595f", "shape":"dot", "alpha":1, "link":"#reference"},
-   "Tester 1":{"color": "#cccdcd", "shape":"dot", "alpha": 1},
-   "Experiment 11":{"color": "#587391", "alpha": 0, "link":"/experiment-1-1"},
-   "Experiment 12":{"color": "#587391", "alpha": 0, "link":"/experiment-1-2"},
-   "Experiment 13":{"color": "#587391", "alpha": 0, "link":"/experiment-1-3"},
-   "Tester 2":{"color": "#cccdcd", "shape":"dot", "alpha": 1, "link":"#reference"},
-   "Experiment 21":{"color": "#587391", "alpha": 0, "link":"/experiment-2-1"},
-   "Experiment 22":{"color": "#587391", "alpha": 0, "link":"/experiment-2-2"},
-   "Experiment 23":{"color": "#587391", "alpha": 0, "link":"/experiment-2-3"},
-   "Tester 3":{"color": "#cccdcd", "shape":"dot", "alpha": 1},
-   "Experiment 31":{"color": "#587391", "alpha": 0, "link":"/experiment-3-1"},
-   "Experiment 32":{"color": "#587391", "alpha": 0, "link":"/experiment-3-2"},
-   "Experiment 33":{"color": "#587391", "alpha": 0, "link":"/experiment-3-3"},
-   "Tester 4":{"color": "#cccdcd", "shape":"dot", "alpha": 1},
+  {"Eye Tracker Experiment":{"color":CLR.center, "shape":"dot", "alpha":1, "link":"#overall"},
+   "Tester 0":{"color": "#cccdcd", "shape":"dot", "alpha": 1, "link":"#tester-0"},
+   "Experiment 00":{"color": "#587391", "alpha": 0, "link":"#experiment-0-0"},
+   "Experiment 01":{"color": "#587391", "alpha": 0, "link":"#experiment-0-1"},
+   "Experiment 02":{"color": "#587391", "alpha": 0, "link":"#experiment-0-2"},
+   "Tester 1":{"color": "#cccdcd", "shape":"dot", "alpha": 1, "link":"#tester-1"},
+   "Experiment 10":{"color": "#587391", "alpha": 0, "link":"#experiment-1-0"},
+   "Experiment 11":{"color": "#587391", "alpha": 0, "link":"#experiment-1-1"},
+   "Experiment 12":{"color": "#587391", "alpha": 0, "link":"#experiment-1-2"},
+   "Tester 2":{"color": "#cccdcd", "shape":"dot", "alpha": 1, "link":"#tester-2"},
+   "Experiment 20":{"color": "#587391", "alpha": 0, "link":"#experiment-2-0"},
+   "Experiment 21":{"color": "#587391", "alpha": 0, "link":"#experiment-2-1"},
+   "Experiment 22":{"color": "#587391", "alpha": 0, "link":"#experiment-2-2"},
+   "Tester 3":{"color": "#cccdcd", "shape":"dot", "alpha": 1, "link":"#tester-3"},
+   "Experiment 30":{"color": "#587391", "alpha": 0, "link":"#experiment-3-0"},
+   "Experiment 31":{"color": "#587391", "alpha": 0, "link":"#experiment-3-1"},
+   "Experiment 32":{"color": "#587391", "alpha": 0, "link":"#experiment-3-2"},
+   "Tester 4":{"color": "#cccdcd", "shape":"dot", "alpha": 1, "link":"#tester-4"},
+   "Experiment 40":{"color": "#587391", "alpha": 0, "link":"/experiment-4-0"},
    "Experiment 41":{"color": "#587391", "alpha": 0, "link":"/experiment-4-1"},
    "Experiment 42":{"color": "#587391", "alpha": 0, "link":"/experiment-4-2"},
-   "Experiment 43":{"color": "#587391", "alpha": 0, "link":"/experiment-4-3"},
-   "Tester 5":{"color": "#cccdcd", "shape":"dot", "alpha": 1},
+   "Tester 5":{"color": "#cccdcd", "shape":"dot", "alpha": 1, "link":"#tester-5"},
+   "Experiment 50":{"color": "#587391", "alpha": 0, "link":"/experiment-5-0"},
    "Experiment 51":{"color": "#587391", "alpha": 0, "link":"/experiment-5-1"},
    "Experiment 52":{"color": "#587391", "alpha": 0, "link":"/experiment-5-2"},
-   "Experiment 53":{"color": "#587391", "alpha": 0, "link":"/experiment-5-3"},
-   "Tester 6":{"color": "#cccdcd", "shape":"dot", "alpha": 1},
+   "Tester 6":{"color": "#cccdcd", "shape":"dot", "alpha": 1, "link":"#tester-6"},
+   "Experiment 60":{"color": "#587391", "alpha": 0, "link":"/experiment-6-0"},
    "Experiment 61":{"color": "#587391", "alpha": 0, "link":"/experiment-6-1"},
    "Experiment 62":{"color": "#587391", "alpha": 0, "link":"/experiment-6-2"},
-   "Experiment 63":{"color": "#587391", "alpha": 0, "link":"/experiment-6-3"},
-   "Tester 7":{"color": "#cccdcd", "shape":"dot", "alpha": 1},
+   "Tester 7":{"color": "#cccdcd", "shape":"dot", "alpha": 1, "link":"#tester-7"},
+   "Experiment 70":{"color": "#587391", "alpha": 0, "link":"/experiment-7-0"},
    "Experiment 71":{"color": "#587391", "alpha": 0, "link":"/experiment-7-1"},
    "Experiment 72":{"color": "#587391", "alpha": 0, "link":"/experiment-7-2"},
-   "Experiment 73":{"color": "#587391", "alpha": 0, "link":"/experiment-7-3"},
-   "Tester 8":{"color": "#cccdcd", "shape":"dot", "alpha": 1},
+   "Tester 8":{"color": "#cccdcd", "shape":"dot", "alpha": 1, "link":"#tester-8"},
+   "Experiment 80":{"color": "#587391", "alpha": 0, "link":"/experiment-8-0"},
    "Experiment 81":{"color": "#587391", "alpha": 0, "link":"/experiment-8-1"},
-   "Experiment 82":{"color": "#587391", "alpha": 0, "link":"/experiment-8-2"},
-   "Experiment 83":{"color": "#587391", "alpha": 0, "link":"/experiment-8-3"},
+   "Experiment 82":{"color": "#587391", "alpha": 0, "link":"/experiment-8-2"}
   }, 
   "edges": {
 
     "Eye Tracker Experiment":{
+      "Tester 0":{"length":10},
       "Tester 1":{"length":10},
       "Tester 2":{"length":10},
       "Tester 3":{"length":10},
@@ -389,57 +412,56 @@ var theUI = {"nodes":
       "Tester 7":{"length":10},
       "Tester 8":{"length":10}
         },
+        "Tester 0":{
+          "Experiment 00":{"length":5},
+          "Experiment 01":{"length":5},
+          "Experiment 02":{"length":5}
+        },
         "Tester 1":{
+          "Experiment 10":{"length":5},
           "Experiment 11":{"length":5},
-          "Experiment 12":{"length":5},
-          "Experiment 13":{"length":5}
+          "Experiment 12":{"length":5}
         },
         "Tester 2":{
+          "Experiment 20":{"length":5},
           "Experiment 21":{"length":5},
-          "Experiment 22":{"length":5},
-          "Experiment 23":{"length":5}
+          "Experiment 22":{"length":5}
         },
         "Tester 3":{
+          "Experiment 30":{"length":5},
           "Experiment 31":{"length":5},
-          "Experiment 32":{"length":5},
-          "Experiment 33":{"length":5}
+          "Experiment 32":{"length":5}
         },
         "Tester 4":{
+          "Experiment 40":{"length":5},
           "Experiment 41":{"length":5},
-          "Experiment 42":{"length":5},
-          "Experiment 43":{"length":5}
+          "Experiment 42":{"length":5}
         },
         "Tester 5":{
+          "Experiment 50":{"length":5},
           "Experiment 51":{"length":5},
-          "Experiment 52":{"length":5},
-          "Experiment 53":{"length":5}
+          "Experiment 52":{"length":5}
         },
         "Tester 6":{
+          "Experiment 60":{"length":5},
           "Experiment 61":{"length":5},
-          "Experiment 62":{"length":5},
-          "Experiment 63":{"length":5}
+          "Experiment 62":{"length":5}
         },
         "Tester 7":{
+          "Experiment 70":{"length":5},
           "Experiment 71":{"length":5},
-          "Experiment 72":{"length":5},
-          "Experiment 73":{"length":5}
+          "Experiment 72":{"length":5}
         },
         "Tester 8":{
+          "Experiment 80":{"length":5},
           "Experiment 81":{"length":5},
-          "Experiment 82":{"length":5},
-          "Experiment 83":{"length":5}
+          "Experiment 82":{"length":5}
         }
   }
 };
   
 
 
-  var CLR = {
-  center:"#b2b19d",
-  tester:"#cccdcd",
-  experiment:"#587391",
-  line:"#cccdcd"
-}
 
 
   var sys = arbor.ParticleSystem()

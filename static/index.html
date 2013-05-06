@@ -9,12 +9,17 @@
 
 		<!-- CSS -->
 		<link rel="stylesheet" type="text/css" href="css/site.css">
+		<link rel="stylesheet" type="text/css" href="css/main.css">
 
 		<!-- Javascript Lib -->
 		<script type="text/javascript" src="js/jquery-1.9.1.js"></script>
 		<script type="text/javascript" src="/js/lib/arbor.js"></script>
 		<script type="text/javascript" src="/js/lib/arbor-tween.js"></script>
 		<script type="text/javascript" src="/js/lib/arbor-graphics.js"></script>
+
+				
+		<script type="text/javascript" src="js/ocanvas-2.4.0.js"></script>
+
 	</head>
 	<body>
 		<div id="arbor">
@@ -25,19 +30,116 @@
 			<canvas id="sitemap" width="1242" height="357" style="opacity: 1;" class=""></canvas>
 
 			<div id="docs" style="opacity: 0; display: none;">
-				<div id="introduction">
-					<h2>about arbor</h2>
+				<div id="overall">
+					<h2>overall</h2>
 				</div>
-				<div id="reference">
-					<h1>ParticleSystem</h1>
+				<div id="tester">
+					<h2>tester</h2>
+				</div>
+				<div id="experiment">
+					<h1>experiment</h1>
+
+					<div class="main">
+						<div class="dataArea fl">
+							<img id="sourceImg" src=""/>
+							<canvas id="canvas" width="200" height="200"></canvas>
+						</div>
+						<div class="dataChart fl">
+
+
+							<h3 id="title"></h3>
+							<div class="mylegend">
+								<ul>
+									
+									<li>
+										<p class="rect fix"><em></em><span>Fixation</span></p> 
+										<p class="total fix"> <span class="avg"></span>
+											<span class="data">
+												<span class="data-title">Avg.</span>
+												<span class="data-num"></span>
+											</span>
+										</p>
+										<p class="perc fix">80%</p>
+									</li>
+									<li>
+										<p class="rect sac"><em></em><span>Saccade</span></p>
+										<p class="total sac"> <span class="avg"></span>
+											<span class="data">
+												<span class="data-title">Avg.</span>
+												<span class="data-num"></span>
+											</span>
+										</p>
+										<p class="perc sac"></p>
+									</li>
+									<li>
+										<p class="rect red"><em></em><span>Out View</span></p>
+										<p class="total red"> <span class="avg"></span>
+											<span class="data">
+												<span class="data-title">Avg.</span>
+												<span class="data-num"></span>
+											</span>
+										</p>
+										<p class="perc red"></p>
+									</li>
+								</ul>
+							</div>
+							<div class="playBar">
+
+							</div>
+						</div>
+						<div class="clear"></div>
+					</div>
+					<div class="timeline">
+
+						<p class="up first-frame"></p>
+						<p class="up last-frame"></p>
+						<p class="down first-frame"></p>
+						<p class="down last-frame"></p>
+						<div class="timeData up">
+							
+							<p class="first"></p>
+							<p class="center"> - { <span></span> } - </p>
+							<p class="last"></p>
+							
+						</div>
+						<div class="zoom lines">
+							<ul></ul>
+							<canvas id="bigCanvas"></canvas>
+						</div>
+
+						<div class="lines normal">
+							<!--<ul></ul>-->
+							<canvas id="smallCanvas"></canvas>
+							<div class="overlay-box">
+								<div id="midControl-l" class="midcontrol left fl"></div>
+								<div id="midControl" class="midcontrol mid fl"></div>
+								<div id="midControl-r" class="midcontrol left fl"></div>
+								<div class="clear"></div>
+							</div>
+							
+							<div id="leftControl" class="control br5 left"><p></p></div>
+							<div id="rightControl" class="control br5 right"><p></p></div>
+						</div>
+
+						<div class="timeData down">
+							<p class="first"></p>
+							<p class="last"></p>
+						</div>
+						
+						<div class="frameTip">
+							<p>hello world!</p>
+						</div>
+					</div>
+
 				</div>
 			</div>
 		</div>
 
 
 		
-
-		<script src="js/site.js"></script>
+		<script type="text/javascript" src="js/main.js"></script>
+		<script type="text/javascript" src="js/controller.js"></script>
+		<script type="text/javascript" src="js/site.js"></script>
 
 
 	</body>

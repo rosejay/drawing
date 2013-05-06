@@ -3,7 +3,7 @@ h1, h2, h3, h4, h5, h6, pre, code,
 form, fieldset, legend, input, button,
 textarea, p, blockquote, th, td, menu{margin:0;padding:0;}
 html{overflow-y:scroll}
-body,button,input,select,textarea{ font:14px/1.5 "Helvetica-Neue", "Arial", sans-serif;}
+body,button,input,select,textarea{ font:14px/1.5 HelveticaNeue-UltraLight, "Helvetica-Neue", "Arial", sans-serif;}
 iframe{border:0;margin:0;padding:0;}
 img, fieldset{border:0;}
 cite,em,strong,th{font-style:inherit;font-weight:inherit;}
@@ -48,18 +48,25 @@ body{
 	overflow-y: auto;
 	overflow-x: hidden;
 	width: 100%;
-	background: #f0f0f0 url(../img/noise-f1.gif) repeat;
+	background: #f5f4f0;
+	/*background: #f0f0f0 url(../img/noise-f1.gif) repeat;*/
+	font: "Helvetica-Neue";
 }
 .main{
 	margin: 20px auto;
-	width: 1000px;
+	width: 980px;
+	padding: 10px;
+	background: #fff;
 	position: relative;
 	display: block;
 }
 .dataArea{
 	position: relative;
-	border: 7px solid #fff;
-	box-shadow: 0 0 20px #aaa;
+	
+	/*box-shadow: 0 0 20px #aaa;*/
+}
+.dataArea img{
+	opacity: 0.7;
 }
 .dataArea img, .dataArea canvas{
 	position: absolute;
@@ -78,7 +85,7 @@ body{
 
 .lines{
 	width: 100%;
-	height: 24px;
+	height: 25px;
 	border-left: 1px solid #ddd;
 	margin-bottom: 5px;
 	position: relative;
@@ -88,7 +95,7 @@ body{
 	margin-bottom: 5px;
 }
 .lines.zoom{
-
+	overflow: hidden;
 }
 .lines.zoom ul{
 	position: absolute;
@@ -107,17 +114,17 @@ body{
 	float: left;
 	width: 10px;
 	height: 100%;
-	border-right: 1px solid #4cd1ff;
+	border-right: 1px solid #b3eaff;
 }
 .lines ul li.fix{
-	background: #0ec2fe;
+	background: #81c6e0;
 }
 .lines ul li.sac{
-	background: #008fbf;
+	background: #587391;
 }
 .lines ul li.red{
-	background: #f35243;
-	border-right: 1px solid #ff9c93;
+	background: #e87461;
+	border-right: 1px solid #ff9f8f;
 }
 
 .lines .overlay-box{
@@ -147,11 +154,12 @@ body{
 	position: absolute;
 	left: 100px;
 	top: -2px;
-	width: 20px;
+	width: 10px;
 	height: 14px;
-	border: 1px solid #ddd;
-	background: #fff;
-	cursor: pointer;
+	/*border: 1px solid #ddd;
+	background: #fff;*/
+
+	cursor: col-resize;
 }
 .lines .control.left{
 	left: -10px;
@@ -159,15 +167,26 @@ body{
 .lines .control.right{
 	left: 190px;
 }
-
+.lines .control.left p{
+	margin-right: 5px;
+}
+.lines .control.right p{
+	margin-left: 5px;
+}
+.lines .control p{
+	width: 3px;
+	height: 10px;
+	margin: 2px 3px;
+	background: #fff;
+}
 
 .dataChart{
-	width: 400px;
+	width: 360px;
 	height: 100%;
-	margin-left: 20px;
+	margin-left: 10px;
 }
 .dataChart h3{
-	color: #ccc;
+	color: #aaa;
 	font-size: 20px;
 	line-height: 50px;
 	border-bottom: 1px solid #ddd;
@@ -176,11 +195,10 @@ body{
 .dataChart p{
 	font: 16px HelveticaNeue-UltraLight, "Helvetica-Neue", "Arial", sans-serif !important;
 	height: 24px;
-	color: #999;
+	color: #333;
 
 }
 .dataChart p span{
-	float: right;
 	color: #666;
 }
 .data-fix{
@@ -214,58 +232,341 @@ body{
 	display: inline-block;
 	margin: 3px 10px 0 0;
 }
+.legend ul li p span.rect em{
+	background: url("../img/sel.png");
+	width: 14px;
+	height: 14px;
+	display: block;
+}
 .legend ul li p.fix,
 .legend ul li p.fix span{
-	color: #0ec2fe;
+	color: #81c6e0;
+}
+.legend ul li p span.rect{
+	cursor: pointer;
 }
 .legend ul li p.fix span.rect{
-	background: #0ec2fe;
+	background: #81c6e0;
 }
 .legend ul li p.sac,
 .legend ul li p.sac span{
-	color: #008fbf;
+	color: #587391;
 }
 .legend ul li p.sac span.rect{
-	background: #008fbf;
+	background: #587391;
 }
 .legend ul li p.red,
 .legend ul li p.red span{
-	color: #f35243;
+	color: #e87461;
 }
 .legend ul li p.red span.rect{
-	background: #f35243;
+	background: #e87461;
 }
 
 
 
-
+.timeline .timeData.down{
+	font-size: 12px;
+	line-height: 16px;
+	height: 16px;
+}
 .timeline .timeData{
 	width: 100%;
-	height: 14px;
-	font-size: 14px;
-	line-height: 14px;
-	color: #ccc;
+	height: 20px;
+	font-size: 16px;
+	line-height: 20px;
+	color: #cccdcd;
 	position: relative;
+	margin: 5px 0;
 }
 .timeline .timeData p{
 	position: absolute;
 	top: 0;
 }
+.timeline .timeData p span{
+	font: 20px HelveticaNeue;
+}
 .timeline .timeData p.first{
-	left: 5px;
+	left: 0px;
 }
 .timeline .timeData p.last{
-	right: 5px;
+	right: 0px;
+}
+.timeline .timeData p{
+	line-height: 16px;
+	margin-top: 4px;
+}
+.timeline .timeData.down p{
+	margin-top: 0;
+}
+.timeline .timeData p.center{
+	width: 160px;
+	margin-left: -80px;
+	left: 50%;
+	text-align: center;
+	margin-top: 0;
 }
 .frameTip{
 	position: absolute;
 	width: 300px;
 	height: 100px;
 	background: rgba(0,0,0,0.8);
-	top: -100px;
+	top: -77px;
 	display: none;
 }
+.last-frame,
+.first-frame{
+	position: absolute;
+	width: 50px;
+	height: 25px;
+	background: #cccdcd;
+	text-align: center;
+	color: #fff;
+	line-height: 25px;
+	top: 25px;
+}
+.down.last-frame,
+.down.first-frame{
+	height: 10px;
+	line-height: 10px;
+	font-size: 10px;
+	top: 55px;
+}
+.first-frame{
+	left: -53px;	
+}
+.last-frame{
+	right: -55px;	
+}
 
+
+.mylegend .rect{
+	width: 60px;
+	height: 60px;
+	cursor: pointer;
+	padding: 10px;
+	border-right: 1px solid #fff;
+	position: relative;
+}
+.mylegend .rect span{
+	width: 60px;
+	position: absolute;
+	bottom: 5px;
+	left: 10px;
+	color: #fff;
+	text-align: center;
+
+
+}
+.mylegend .rect em{
+	background: url("../img/sel.png");
+	width: 80px;
+	height: 80px;
+	position: absolute;
+	top: 0;
+	left: 0;
+	display: block;
+}
+.mylegend .rect em:hover{
+	background-position: 0 -80px;
+}
+.mylegend .fix.total,
+.mylegend .fix.rect{
+	background: #81c6e0;
+}
+.mylegend .fix.perc span{
+	color: #81c6e0;
+}
+.mylegend .sac.total,
+.mylegend .sac.rect{
+	background: #587391;
+}
+.mylegend .sac.perc span{
+	color: #587391;
+}
+.mylegend .red.total,
+.mylegend .red.rect{
+	background: #e87461;
+}
+.mylegend .red.perc span{
+	color: #e87461;
+}
+.mylegend .perc{
+	width: 50px;
+	height: 80px;
+	line-height: 40px !important;
+	font-size: 20px !important;
+	position: relative;
+	margin-left: 10px;
+}
+.mylegend .perc span{
+	position: absolute;
+	left: 0;
+}
+.mylegend .perc .data-perc{
+	font-size: 20px;
+	line-height: 30px;
+	top: 0;
+}
+.mylegend .perc .data-time{
+	font-size: 14px;
+	bottom: 0;
+	line-height: 20px;
+}
+.mylegend ul li{
+	width: 100%;
+	float: left;
+	margin-bottom: 1px;
+}
+.mylegend .total{
+	height: 80px;
+	width: 210px;
+	min-width: 70px;
+}
+.mylegend .total span{
+	float: left;
+}
+.mylegend .total .avg{
+	border-right: 1px solid #fff;
+	width: 30px;
+	min-width: 1px;
+	height: 100%;
+	display: block;
+}
+.mylegend .total .data{
+	width: 55px;
+	height: 100%;
+	position: relative;
+}
+.mylegend .total .data span{
+	position: absolute;
+	left: 5px;
+	font-size: 10px;
+	color: #fff;
+	float: left;
+}
+.mylegend .total .data span.data-title{
+	top: 5px;
+	color: rgba(255,255,255,0.5);
+}
+.mylegend .total .data span.data-num{
+	bottom: 5px;
+	font-size: 16px;
+}
+.mylegend ul li p{
+	float: left;
+}
+
+#smallCanvas{
+	position: absolute;
+	top: 0;
+	left: 0
+}
+.playBar{
+	background: #eee;
+	margin-top: 20px;
+	width: 350px;
+	height: 60px;
+	padding: 10px;
+}
+.playBar .playbtn{
+	width: 60px;
+	height: 60px;
+	background: url("../img/play.png") 0 0 no-repeat;
+	cursor: pointer;
+}
+.playBar .play.playbtn{
+	background-position: 0 0;
+}
+.playBar .play.playbtn:hover{
+	background-position: 0 -60px;
+}
+.playBar .play.playbtn.stop{
+	background-position: 0 -120px;
+}
+.playBar .play.playbtn.stop:hover{
+	background-position: 0 -180px;
+}
+.playBar .FrameControl{
+	width: 280px;
+	height: 60px;
+	margin-left: 10px;
+}
+.playBar .FrameControl .checkFrame{
+	width: 100%;
+	height: 20px;
+	text-align: right;
+	color: #587391;
+}
+.playBar .FrameControl .checkFrame.dis{
+	color: #ddd;
+}
+.playBar .FrameControl .checkFrame.dis span{
+	background: #ddd;
+}
+.playBar .FrameControl .checkFrame span{
+	background: #587391;
+	width: 14px;
+	height: 14px;
+	display: inline-block;
+	margin-right: 10px;
+	cursor: pointer;
+}
+.playBar .FrameControl div{
+	width: 100%;
+	height: 40px;
+	position: relative;
+}
+.playBar .FrameControl div p{
+	position: absolute;
+	color: #ccc;
+	top: 11px;
+}
+.playBar .FrameControl div p.s{
+	left: 0;
+	line-height: 16px;
+}
+.playBar .FrameControl div p.e{
+	top: 11px;
+	right: 0;
+	text-align: right;
+	line-height: 16px;
+}
+.playBar .FrameControl div p.c{
+	background: #eee;
+	font-size: 20px !important;
+	color: #999;
+	top: 8px;
+	left: 20px;
+	width: 30px;
+	line-height: 20px;
+	text-align: center;
+}
+.playBar .FrameControl div .slot{
+	height: 10px;
+	width: 100%;
+	background: #81c6e0;
+	position: absolute;
+	bottom: 0;
+
+}
+.playBar .FrameControl div .slot .slider{
+	width: 9px;
+	height: 10px;
+	background: url("../img/slider.png") 0 0 no-repeat;
+	cursor: pointer;
+	position: absolute;
+	left: 30px;
+}
+.playBar .FrameControl div.dis p.c{
+	color: #ccc;
+}
+.playBar .FrameControl div.dis .slot{
+	background: #ddd;
+}
+.playBar .FrameControl div.dis .slot .slider{
+	background-position: 0 -10px;
+}
 
 
 

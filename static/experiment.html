@@ -14,7 +14,7 @@
     	<script type="text/javascript" src="js/sylvester.src.js"></script>
     	<script type="text/javascript" src="js/raphael.js"></script>
     	<script type="text/javascript" src="js/kalman.js"></script>
-
+    	<script type="text/javascript" src="js/lib/async.js"></script>
 	</head>
 	<body>
 
@@ -27,45 +27,91 @@
 			<div class="dataChart fl">
 
 
-				<h3 id="title">Experiment 7 - Standard</h3>
-
-				<div class="data-fix">
-					<p id="totalT">Total Time: <span></span></p>
-					<!--
-					<p id="fixationT">Fixation Time: <span></span></p>
-					<p id="saccadeT">Saccade Time: <span></span></p>
-				-->
-					<p id="frameN">Frame Number: <span></span></p>
-				</div>
-				
-				<div class="data-dyn">
-					<p id="segmentN">Segment Number: <span></span></p>
-					<p id="segmentD">Segment Duration: <span></span></p>
-					<p id="startF">Start Frame: <span></span></p>
-					<p id="endF">End Frame: <span></span></p>
-				</div>
-
-
-				<div class="legend">
+				<h3 id="title"></h3>
+				<div class="mylegend">
 					<ul>
-						<li><p ><span class="rect"></span> <span class="perc">Per.</span><span class="num">Total</span><span class="avg">Avg.</span></p></li>
-						<li><p class="fix"><span class="rect"></span>Fixation <span class="perc"></span><span class="num"></span><span class="avg"></span></p></li>
-						<li><p class="sac"><span class="rect"></span>Saccade <span class="perc"></span><span class="num"></span><span class="avg"></span></p></li>
-						<li><p class="red"><span class="rect"></span>Out View <span class="perc"></span><span class="num"></span><span class="avg"></span></p></li>
+						
+						<li>
+							<p class="rect fix"><em></em><span>Fixation</span></p> 
+							<p class="total fix"> <span class="avg"></span>
+								<span class="data">
+									<span class="data-title">Avg.</span>
+									<span class="data-num"></span>
+								</span>
+							</p>
+							<p class="perc fix">
+								<span class="data-perc"></span>
+								<span class="data-time"></span>
+							</p>
+							
+						</li>
+						<li>
+							<p class="rect sac"><em></em><span>Saccade</span></p>
+							<p class="total sac"> <span class="avg"></span>
+								<span class="data">
+									<span class="data-title">Avg.</span>
+									<span class="data-num"></span>
+								</span>
+							</p>
+							<p class="perc sac">
+								<span class="data-perc"></span>
+								<span class="data-time"></span>
+							</p>
+						</li>
+						<li>
+							<p class="rect red"><em></em><span>Out View</span></p>
+							<p class="total red"> <span class="avg"></span>
+								<span class="data">
+									<span class="data-title">Avg.</span>
+									<span class="data-num"></span>
+								</span>
+							</p>
+							<p class="perc red">
+								<span class="data-perc"></span>
+								<span class="data-time"></span>
+							</p>
+						</li>
 					</ul>
+				</div>
+				<div class="clear"></div>
+				<div class="playBar">
+					<div class="play playbtn fl"></div>
+					<div class="FrameControl fl">
+						<p class="checkFrame"><span></span>by Frame</p>
+						<div class="checkFrameDiv">
+							<p class="s">0</p>
+							<p class="e">50</p>
+							<p class="c">20</p>
+							<div class="slot">
+								<div class="slider"></div>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 			<div class="clear"></div>
 		</div>
 		<div class="timeline">
 
+			<p class="up first-frame"></p>
+			<p class="up last-frame"></p>
+			<p class="down first-frame"></p>
+			<p class="down last-frame"></p>
+			<div class="timeData up">
+				
+				<p class="first"></p>
+				<p class="center"> - { <span></span> } - </p>
+				<p class="last"></p>
+				
+			</div>
 			<div class="zoom lines">
 				<ul></ul>
-				
+				<canvas id="bigCanvas"></canvas>
 			</div>
 
 			<div class="lines normal">
-				<ul></ul>
+				<!--<ul></ul>-->
+				<canvas id="smallCanvas"></canvas>
 				<div class="overlay-box">
 					<div id="midControl-l" class="midcontrol left fl"></div>
 					<div id="midControl" class="midcontrol mid fl"></div>
@@ -73,13 +119,13 @@
 					<div class="clear"></div>
 				</div>
 				
-				<div id="leftControl" class="control br5 left"></div>
-				<div id="rightControl" class="control br5 right"></div>
+				<div id="leftControl" class="control br5 left"><p></p></div>
+				<div id="rightControl" class="control br5 right"><p></p></div>
 			</div>
 
-			<div class="timeData">
-				<p class="first">00:00</p>
-				<p class="last">20:00</p>
+			<div class="timeData down">
+				<p class="first"></p>
+				<p class="last"></p>
 			</div>
 			
 			<div class="frameTip">
@@ -93,6 +139,7 @@
 		<script type="text/javascript" src="js/controller.js"></script>
 
 		<script type="text/javascript" src="js/kalman3.js"></script>
+
 
 	</body>
 </html>
