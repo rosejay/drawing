@@ -49,6 +49,8 @@ body{
 	overflow-x: hidden;
 	width: 100%;
 	background: #f5f4f0;
+	background: #fff;
+
 	/*background: #f0f0f0 url(../img/noise-f1.gif) repeat;*/
 	font: "Helvetica-Neue";
 }
@@ -59,6 +61,7 @@ body{
 	background: #fff;
 	position: relative;
 	display: block;
+	border: 1px solid #ddd;
 }
 .dataArea{
 	position: relative;
@@ -295,6 +298,7 @@ body{
 .timeline .timeData p{
 	line-height: 16px;
 	margin-top: 4px;
+	color: #999;
 }
 .timeline .timeData.down p{
 	margin-top: 0;
@@ -463,9 +467,10 @@ body{
 	left: 0
 }
 .playBar{
-	background: #eee;
-	margin-top: 20px;
-	width: 350px;
+	background: #f8f8f8;
+	border: 1px solid #eee;
+	margin-top: 64px;
+	width: 340px;
 	height: 60px;
 	padding: 10px;
 }
@@ -488,7 +493,7 @@ body{
 	background-position: 0 -180px;
 }
 .playBar .FrameControl{
-	width: 280px;
+	width: 270px;
 	height: 60px;
 	margin-left: 10px;
 }
@@ -533,7 +538,7 @@ body{
 	line-height: 16px;
 }
 .playBar .FrameControl div p.c{
-	background: #eee;
+	background: #f8f8f8;
 	font-size: 20px !important;
 	color: #999;
 	top: 8px;

@@ -3,11 +3,6 @@ var winwidth = window.innerWidth,	// windows width
 	winheight = window.innerHeight;	// windows height
 
 var controlWidth = 1000 ;
-var fixColor = "#81c6e0",
-	sacColor = "#587391",
-	redColor = "#e87461";
-
-
 
 // class marker
 var Controller = function( data, result, tester, experiment ){
@@ -16,7 +11,7 @@ var Controller = function( data, result, tester, experiment ){
 	this.isFrame = true;
 	this.curFrame = 0;
 	this.segDiv = 0;
-	this.frameWidth = 270;
+	this.frameWidth = 260;
 	this.frameMax = 50;
 	this.isMoveFrame = false;
 
@@ -100,10 +95,12 @@ var Controller = function( data, result, tester, experiment ){
 			if(self.isMoveLeft){
 
 				self.leftX = self.tempX + e.pageX - self.mouseX;
+				self.checkLeftRight("left");
 			}
 			if(self.isMoveRight){
 
 				self.rightX = self.tempX + e.pageX - self.mouseX;
+				self.checkLeftRight("right");
 			}
 			if(self.isMoveMid){
 
@@ -149,6 +146,7 @@ var Controller = function( data, result, tester, experiment ){
 			// stop
 			$(this).removeClass("stop");
 			window.clearInterval(self.playInterval);
+			self.draw();
 		}
 		else{
 			// play
@@ -198,9 +196,9 @@ Controller.prototype.initShape = function() {
 		if(this.data[i].type == 2){
 
 			if(this.data[i].isIn)
-				color = sacColor;
+				color = this.sacColor;
 			else
-				color = redColor;
+				color = this.outColor;
 
 			var line = canvas.display.line({
 				start: { x: this.data[i].startX, y: this.data[i].startY },
@@ -260,9 +258,9 @@ Controller.prototype.initShape = function() {
 		else if(this.data[i].type == 1){
 
 			if(this.data[i].isIn)
-				color = fixColor;
+				color = this.fixColor;
 			else
-				color = redColor;
+				color = this.outColor;
 
 			var radius = parseInt(this.data[i].duration * 50);
         	var ellipse = canvas.display.ellipse({
@@ -300,7 +298,8 @@ Controller.prototype.initShape = function() {
 }
 Controller.prototype.update = function() {
 
-	
+	$(".slot .slider").css("left", this.framePos + "px");
+	$(".checkFrameDiv .c").html(this.curFrame).css("left", this.framePos - 10 + "px")
 
 	// console.log("l:"+ this.leftX + "  r:" + this.rightX)
 	$("#leftControl").css("left", (this.leftX-this.controlWidth/2) + "px");
@@ -402,6 +401,31 @@ Controller.prototype.updateZoomLines = function(){
 
 }
 
+Controller.prototype.checkLeftRight = function(type) {
+
+	var endFrame = parseInt(this.smallZoomRatio * this.rightX);
+	var endN = this.binarySearch(endFrame);
+
+	var startFrame = parseInt(this.smallZoomRatio * this.leftX);
+	var startN = this.binarySearch(startFrame);
+
+	this.curFrame = endN - startN;
+	if(this.curFrame > 50){
+		if(type == "left"){
+			startN = endN - 50;
+			this.leftX = this.data[startN].frame / this.smallZoomRatio;
+		}
+		else{
+			endN = startN + 50;
+			this.rightX = this.data[endN].frame / this.smallZoomRatio;
+		}
+		this.curFrame = 50;
+	}
+
+	this.framePos = this.curFrame * this.segDiv;
+	
+
+}
 Controller.prototype.check = function() {
 
 	// left
@@ -599,7 +623,7 @@ Controller.prototype.draw = function(){
 	
 	if(this.isFrame){
 
-		var a = parseInt(this.leftX * this.max / this.width);
+		var a = parseInt(this.leftX * this.smallZoomRatio);
 		var startN = this.binarySearch(a);
 		var endN = startN + this.curFrame - 1;
 	}
@@ -619,6 +643,7 @@ Controller.prototype.draw = function(){
 	this.countFrame(startN, endN);
 	this.setFrame();
 	canvas.reset();
+	console.log(startN, endN);
 	for(var i = startN; i< endN; i++){
 
 
@@ -632,7 +657,6 @@ Controller.prototype.draw = function(){
 		// draw
 		if( (!this.data[i].isIn && this.isOut) || 
 			(this.isFix && this.data[i].type == 1) || (this.isSac && this.data[i].type == 2) )
-
 			for(var n = 0; n<this.data[i].shape.length; n++){
 				canvas.addChild(this.data[i].shape[n]);
 

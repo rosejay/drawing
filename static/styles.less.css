@@ -1,0 +1,24 @@
+
+@width: 40px;
+ul.boxChart{
+	width: (@width * 3 + 3);
+	height: (@width * 3 + 3);
+	li{
+		width: (@width * 3 + 3);
+		height: @width;
+		ul{
+			width: (@width * 3 + 3);
+			height: @width;
+			li {
+				width: @width; 
+				height: @width; 
+				background: #eee;
+				margin: 1px;
+				float: left;
+			}
+		}
+	}
+}
+
+
+

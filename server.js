@@ -8,7 +8,6 @@ mongo.connect('mongodb://localhost:27017/games', function(err, conn){
 	db = conn;
 });
 
-
 app.use(express.static(__dirname+'/static'));
 app.use(express.bodyParser());
 app.use(express.cookieParser());
