@@ -36,6 +36,7 @@ var Controller = function( data, result, tester, experiment ){
 	// ui
 	this.width = controlWidth;
 	this.controlWidth = 10;
+	console.log(this.data.length)
 	this.max = this.data[this.data.length - 1].frame;
 	this.smallZoomRatio = this.max / this.width;
 	this.bigZoomRatio = 0;
@@ -46,6 +47,7 @@ var Controller = function( data, result, tester, experiment ){
 	this.sacColor = "#587391";
 	this.fixColor = "#81c6e0";
 	this.outColor = "#e87461";
+	this.grayColor = "#aaa";
 	this.bgColor = "#f5f4f0";
 
 	this.playInterval;
@@ -195,10 +197,16 @@ Controller.prototype.initShape = function() {
 		// draw
 		if(this.data[i].type == 2){
 
-			if(this.data[i].isIn)
-				color = this.sacColor;
-			else
-				color = this.outColor;
+			if(this.data[i].isBroken){
+				color = this.grayColor;
+			}
+			else{
+				if(this.data[i].isIn)
+					color = this.sacColor;
+				else
+					color = this.outColor;
+			}
+				
 
 			var line = canvas.display.line({
 				start: { x: this.data[i].startX, y: this.data[i].startY },
@@ -257,10 +265,16 @@ Controller.prototype.initShape = function() {
 		}
 		else if(this.data[i].type == 1){
 
-			if(this.data[i].isIn)
-				color = this.fixColor;
-			else
-				color = this.outColor;
+			if(this.data[i].isBroken){
+				color = this.grayColor;
+			}
+			else{
+				if(this.data[i].isIn)
+					color = this.fixColor;
+				else
+					color = this.outColor;
+			}
+				
 
 			var radius = parseInt(this.data[i].duration * 50);
         	var ellipse = canvas.display.ellipse({
@@ -375,20 +389,30 @@ Controller.prototype.updateZoomLines = function(){
 		var $li = $("<li index='"+i+"'></li>").css("width",width+"px");
 
 		if(this.data[i].type == 1){
-
-			if( this.data[i].isIn )
-				$li.addClass("fix");
-			else{
-				$li.addClass("red");
+			if(this.data[i].isBroken){
+				$li.addClass("gray");
 			}
+			else{
+				if( this.data[i].isIn )
+					$li.addClass("fix");
+				else{
+					$li.addClass("red");
+				}
+			}
+				
 		}
 		else{
-
-			if( this.data[i].isIn )
-				$li.addClass("sac");
-			else{
-				$li.addClass("red");
+			if(this.data[i].isBroken){
+				$li.addClass("gray");
 			}
+			else{
+				if( this.data[i].isIn )
+					$li.addClass("sac");
+				else{
+					$li.addClass("red");
+				}
+			}
+				
 		}
 
 		prevFrame = this.data[i].frame;
@@ -461,14 +485,20 @@ Controller.prototype.initLines = function(){
 		var width = this.data[i].frame - prevFrame;
 
 		// set color
-		if(this.data[i].isIn){
-			if(this.data[i].type == 1)
-				ctx.fillStyle=this.fixColor;
-			else if(this.data[i].type == 2)
-				ctx.fillStyle = this.sacColor;
+		if(this.data[i].isBroken){
+			ctx.fillStyle=this.grayColor;
 		}
-		else
-			ctx.fillStyle = this.outColor;
+		else{
+			if(this.data[i].isIn){
+				if(this.data[i].type == 1)
+					ctx.fillStyle=this.fixColor;
+				else if(this.data[i].type == 2)
+					ctx.fillStyle = this.sacColor;
+			}
+			else
+				ctx.fillStyle = this.outColor;
+		}
+			
 		
 
 		ctx.fillRect(prevFrame,0,width,10);
@@ -559,10 +589,10 @@ Controller.prototype.getRightX = function() {
 Controller.prototype.play = function() {
 
 	this.result.ui();
-	var div = 1/this.smallZoomRatio;
+	var div = 1.0/this.smallZoomRatio;
 	window.clearInterval(this.playInterval);
 	var self = this;
-
+	var count = 0;
 	this.playInterval = setInterval(function(){
 
 		if(self.isFrame){
@@ -579,7 +609,7 @@ Controller.prototype.play = function() {
 		if(self.rightX>=self.width)
 			window.clearInterval(self.playInterval);
 
-	},1000/30);
+	},1000/30.0);
 
 }
 Controller.prototype.initFrame = function(){
@@ -620,9 +650,7 @@ Controller.prototype.adjustFrame = function(x){
 }
 Controller.prototype.draw = function(){
 
-	
 	if(this.isFrame){
-
 		var a = parseInt(this.leftX * this.smallZoomRatio);
 		var startN = this.binarySearch(a);
 		var endN = startN + this.curFrame - 1;
@@ -634,16 +662,22 @@ Controller.prototype.draw = function(){
 		var endN = this.binarySearch(b);
 	}
 
+	this.countFrame(startN, endN);
+	this.setFrame();
+	
 	var FrameNum = 0;
 	var FrameTime = 0;
 	var startFrame = 0;
 	var endFrame = 0;
 	var isStart = false;
 
-	this.countFrame(startN, endN);
-	this.setFrame();
 	canvas.reset();
-	console.log(startN, endN);
+
+	var children = canvas.children;
+	for (var i = 0; i < children.length; i++) {
+		children[i].remove();
+	}
+
 	for(var i = startN; i< endN; i++){
 
 
@@ -659,18 +693,8 @@ Controller.prototype.draw = function(){
 			(this.isFix && this.data[i].type == 1) || (this.isSac && this.data[i].type == 2) )
 			for(var n = 0; n<this.data[i].shape.length; n++){
 				canvas.addChild(this.data[i].shape[n]);
+				console.log(canvas.children.length,"end")
 
-				/*
-				this.data[i].shape[n].bind("mouseenter touchenter", function () {
-					this.radius = 10;
-					canvas.redraw();
-				}).bind("mouseleave touchleave", function () {
-					this.radius = 8;
-					canvas.redraw();
-				}).bind("click tap", function () {
-					
-				});
-*/
 			}
 
 		FrameTime += this.data[i].duration;
@@ -688,8 +712,6 @@ Controller.prototype.draw = function(){
 	$(".up.last-frame").html(endFrame);
 	$(".timeData.up .center span").html(this.getNum(this.rightX - this.leftX));
 
-	//$("#FrameN span").html(FrameNum + "&nbsp;&nbsp;&nbsp;");
-	//$("#FrameD span").html(FrameTime.toFixed(2) + " s");
 
 }
 

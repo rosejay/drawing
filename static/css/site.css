@@ -70,7 +70,7 @@ body{
 }
 #nav{
   color:#887;
-  padding:20px 80px 0 60px;
+  padding:12px 80px 0 60px;
   height:45px;
   margin:10px 0px 0 0px;
   font-size: 20px;
@@ -129,9 +129,7 @@ body{
 #docs{
   position:relative;
   padding:0 70px 0 0;
-  background: #f5f4f0;
-  
-/*  border-right:1px solid #ccc;*/
+  width: 100%;
 }
 
 #docs h1{
@@ -141,6 +139,7 @@ body{
   color:#ad621c;
 }
 #experiment{
+  width: 100%;
 }
 
 /*#docs h1{

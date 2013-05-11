@@ -125,6 +125,10 @@ body{
 .lines ul li.sac{
 	background: #587391;
 }
+.lines ul li.gray{
+	background: #aaa;
+	border-right: 1px solid #eee;
+}
 .lines ul li.red{
 	background: #e87461;
 	border-right: 1px solid #ff9f8f;
@@ -346,7 +350,7 @@ body{
 
 .mylegend .rect{
 	width: 60px;
-	height: 60px;
+	height: 40px;
 	cursor: pointer;
 	padding: 10px;
 	border-right: 1px solid #fff;
@@ -365,7 +369,7 @@ body{
 .mylegend .rect em{
 	background: url("../img/sel.png");
 	width: 80px;
-	height: 80px;
+	height: 60px;
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -395,9 +399,37 @@ body{
 .mylegend .red.perc span{
 	color: #e87461;
 }
+.mylegend .perc.gray .data-perc{
+	top: 5px;
+}
+.mylegend .gray.rect{
+	cursor: auto;
+	height: 20px;
+}
+.mylegend .gray.rect span{
+	bottom: 10px;
+}
+.mylegend .gray.total{
+	height: 40px;
+}
+.mylegend .gray.total,
+.mylegend .red.total{
+	min-width: 0;
+}
+.mylegend li.t-20{
+	margin-top: 20px;
+}
+
+.mylegend .gray.total,
+.mylegend .gray.rect{
+	background: #aaa;
+}
+.mylegend .gray.perc span{
+	color: #aaa;
+}
 .mylegend .perc{
 	width: 50px;
-	height: 80px;
+	height: 60px;
 	line-height: 40px !important;
 	font-size: 20px !important;
 	position: relative;
@@ -423,9 +455,11 @@ body{
 	margin-bottom: 1px;
 }
 .mylegend .total{
-	height: 80px;
+	height: 60px;
 	width: 210px;
 	min-width: 70px;
+	max-width: 210px;
+
 }
 .mylegend .total span{
 	float: left;
@@ -469,7 +503,7 @@ body{
 .playBar{
 	background: #f8f8f8;
 	border: 1px solid #eee;
-	margin-top: 64px;
+	margin-top: 44px;
 	width: 340px;
 	height: 60px;
 	padding: 10px;

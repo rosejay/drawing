@@ -135,6 +135,7 @@
         var _section = null
 
         var handler = {
+          
           moved:function(e){
             var pos = $(canvas).offset();
             _mouseP = arbor.Point(e.pageX-pos.left, e.pageY-pos.top)
@@ -142,6 +143,8 @@
 
             if (!nearest.node) return false
 
+
+            
             //if (nearest.node.data.shape!='dot'){
               selected = (nearest.distance < 50) ? nearest : null
               if (selected){
@@ -163,6 +166,11 @@
               window.status = ''
             }
             
+            if(!nearest.node.data.link)
+              dom.removeClass('linkable')
+            else
+              dom.addClass('linkable')
+
             return false
           },
           clicked:function(e){
@@ -184,7 +192,6 @@
                    experiment = arr[2];
                    newPage(tester, experiment);
                  }
-                  console.log(arr[0].substr(1))
 
                  $(that).trigger({type:"navigate", path:arr[0].substr(1)})
 
@@ -347,9 +354,11 @@
 
 var CLR = {
   center:"#f0595f",
-  tester:"#cccdcd",
+  tester:"#bbbbbb",
+  testerDis:"#dddddd",
   experiment:"#587391",
-  line:"#cccdcd"
+  experimentDis:"#9babbd",
+  line:"#dddddd"
 }
 
 var testerNum = 8;
@@ -362,42 +371,42 @@ var experiment = 0;
 
 var theUI = {"nodes": 
   {"Eye Tracker Experiment":{"color":CLR.center, "shape":"dot", "alpha":1, "link":"#overall"},
-   "Tester 0":{"color": "#cccdcd", "shape":"dot", "alpha": 1, "link":"#tester-0"},
-   "Experiment 00":{"color": "#587391", "alpha": 0, "link":"#experiment-0-0"},
-   "Experiment 01":{"color": "#587391", "alpha": 0, "link":"#experiment-0-1"},
-   "Experiment 02":{"color": "#587391", "alpha": 0, "link":"#experiment-0-2"},
-   "Tester 1":{"color": "#cccdcd", "shape":"dot", "alpha": 1, "link":"#tester-1"},
-   "Experiment 10":{"color": "#587391", "alpha": 0, "link":"#experiment-1-0"},
-   "Experiment 11":{"color": "#587391", "alpha": 0, "link":"#experiment-1-1"},
-   "Experiment 12":{"color": "#587391", "alpha": 0, "link":"#experiment-1-2"},
-   "Tester 2":{"color": "#cccdcd", "shape":"dot", "alpha": 1, "link":"#tester-2"},
-   "Experiment 20":{"color": "#587391", "alpha": 0, "link":"#experiment-2-0"},
-   "Experiment 21":{"color": "#587391", "alpha": 0, "link":"#experiment-2-1"},
-   "Experiment 22":{"color": "#587391", "alpha": 0, "link":"#experiment-2-2"},
-   "Tester 3":{"color": "#cccdcd", "shape":"dot", "alpha": 1, "link":"#tester-3"},
-   "Experiment 30":{"color": "#587391", "alpha": 0, "link":"#experiment-3-0"},
-   "Experiment 31":{"color": "#587391", "alpha": 0, "link":"#experiment-3-1"},
-   "Experiment 32":{"color": "#587391", "alpha": 0, "link":"#experiment-3-2"},
-   "Tester 4":{"color": "#cccdcd", "shape":"dot", "alpha": 1, "link":"#tester-4"},
-   "Experiment 40":{"color": "#587391", "alpha": 0, "link":"/experiment-4-0"},
-   "Experiment 41":{"color": "#587391", "alpha": 0, "link":"/experiment-4-1"},
-   "Experiment 42":{"color": "#587391", "alpha": 0, "link":"/experiment-4-2"},
-   "Tester 5":{"color": "#cccdcd", "shape":"dot", "alpha": 1, "link":"#tester-5"},
-   "Experiment 50":{"color": "#587391", "alpha": 0, "link":"/experiment-5-0"},
-   "Experiment 51":{"color": "#587391", "alpha": 0, "link":"/experiment-5-1"},
-   "Experiment 52":{"color": "#587391", "alpha": 0, "link":"/experiment-5-2"},
-   "Tester 6":{"color": "#cccdcd", "shape":"dot", "alpha": 1, "link":"#tester-6"},
-   "Experiment 60":{"color": "#587391", "alpha": 0, "link":"/experiment-6-0"},
-   "Experiment 61":{"color": "#587391", "alpha": 0, "link":"/experiment-6-1"},
-   "Experiment 62":{"color": "#587391", "alpha": 0, "link":"/experiment-6-2"},
-   "Tester 7":{"color": "#cccdcd", "shape":"dot", "alpha": 1, "link":"#tester-7"},
-   "Experiment 70":{"color": "#587391", "alpha": 0, "link":"/experiment-7-0"},
-   "Experiment 71":{"color": "#587391", "alpha": 0, "link":"/experiment-7-1"},
-   "Experiment 72":{"color": "#587391", "alpha": 0, "link":"/experiment-7-2"},
-   "Tester 8":{"color": "#cccdcd", "shape":"dot", "alpha": 1, "link":"#tester-8"},
-   "Experiment 80":{"color": "#587391", "alpha": 0, "link":"/experiment-8-0"},
-   "Experiment 81":{"color": "#587391", "alpha": 0, "link":"/experiment-8-1"},
-   "Experiment 82":{"color": "#587391", "alpha": 0, "link":"/experiment-8-2"}
+   "Tester 0":{"color": CLR.testerDis, "shape":"dot", "alpha": 1 },
+   "Experiment 00":{"color": CLR.experiment, "alpha": 0, "link":"#experiment-0-0"},
+   "Experiment 01":{"color": CLR.experimentDis, "alpha": 0 },
+   "Experiment 02":{"color": CLR.experimentDis, "alpha": 0 },
+   "Tester 1":{"color": CLR.testerDis, "shape":"dot", "alpha": 1 },
+   "Experiment 10":{"color": CLR.experiment, "alpha": 0, "link":"#experiment-1-0"},
+   "Experiment 11":{"color": CLR.experimentDis, "alpha": 0 },
+   "Experiment 12":{"color": CLR.experimentDis, "alpha": 0 },
+   "Tester 2":{"color": CLR.testerDis, "shape":"dot", "alpha": 1 },
+   "Experiment 20":{"color": CLR.experiment, "alpha": 0, "link":"#experiment-2-0"},
+   "Experiment 21":{"color": CLR.experiment, "alpha": 0, "link":"#experiment-2-1"},
+   "Experiment 22":{"color": CLR.experimentDis, "alpha": 0 },
+   "Tester 3":{"color": CLR.testerDis, "shape":"dot", "alpha": 1 },
+   "Experiment 30":{"color": CLR.experimentDis, "alpha": 0 },
+   "Experiment 31":{"color": CLR.experimentDis, "alpha": 0 },
+   "Experiment 32":{"color": CLR.experimentDis, "alpha": 0 },
+   "Tester 4":{"color": CLR.tester, "shape":"dot", "alpha": 1, "link":"#tester-4"},
+   "Experiment 40":{"color": CLR.experiment, "alpha": 0, "link":"#experiment-4-0"},
+   "Experiment 41":{"color": CLR.experiment, "alpha": 0, "link":"#experiment-4-1"},
+   "Experiment 42":{"color": CLR.experiment, "alpha": 0, "link":"#experiment-4-2"},
+   "Tester 5":{"color": CLR.tester, "shape":"dot", "alpha": 1, "link":"#tester-5"},
+   "Experiment 50":{"color": CLR.experiment, "alpha": 0, "link":"#experiment-5-0"},
+   "Experiment 51":{"color": CLR.experiment, "alpha": 0, "link":"#experiment-5-1"},
+   "Experiment 52":{"color": CLR.experiment, "alpha": 0, "link":"#experiment-5-2"},
+   "Tester 6":{"color": CLR.tester, "shape":"dot", "alpha": 1, "link":"#tester-6"},
+   "Experiment 60":{"color": CLR.experiment, "alpha": 0, "link":"#experiment-6-0"},
+   "Experiment 61":{"color": CLR.experiment, "alpha": 0, "link":"#experiment-6-1"},
+   "Experiment 62":{"color": CLR.experiment, "alpha": 0, "link":"#experiment-6-2"},
+   "Tester 7":{"color": CLR.testerDis, "shape":"dot", "alpha": 1 },
+   "Experiment 70":{"color": CLR.experiment, "alpha": 0, "link":"#experiment-7-0"},
+   "Experiment 71":{"color": CLR.experiment, "alpha": 0, "link":"#experiment-7-1"},
+   "Experiment 72":{"color": CLR.experimentDis, "alpha": 0 },
+   "Tester 8":{"color": CLR.testerDis, "shape":"dot", "alpha": 1 },
+   "Experiment 80":{"color": CLR.experiment, "alpha": 0, "link":"#experiment-8-0"},
+   "Experiment 81":{"color": CLR.experiment, "alpha": 0, "link":"#experiment-8-1"},
+   "Experiment 82":{"color": CLR.experimentDis, "alpha": 0 }
   }, 
   "edges": {
 

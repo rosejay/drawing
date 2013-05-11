@@ -1,17 +1,7 @@
-============================
-Campus Challenge
-============================
-
-## File Directories of [game]
-
-`node_modules` - required documents of web application framework for node [express] (http://expressjs.com/)
-
-`static` - index.html - 
-	 - `js` /  `main.js` - includes the main javascript codes
-	 - `css` / `main.css`- includes the main css
-	 - `img` / - includes images 
-
-`server.js` - node server
+========================================
+Visualization of Eye Tracker Experiment
+by Ye Lin (rosejay.org)
+========================================
 
 ## Instructions for Running Project
 

@@ -13,17 +13,7 @@ var c=document.getElementById("canvas");
 var ctx=c.getContext("2d");
 ctx.fillStyle="#FF0000";
 
-var testerNum = 9;
-var experimentNum = 3;
-var isExist = [[1,0,0],
-			   [1,0,0],
-			   [1,1,0],
-			   [0,0,0],
-			   [1,1,0],
-			   [0,0,0],
-			   [0,0,0],
-			   [0,0,0],
-			   [0,0,0]];
+
 
 var eyeData = [];
 var eyeResult = [];
@@ -101,15 +91,23 @@ function initResult(){
 			//eyeResult[i][j].ui();
 		}
 	}
-	console.log("data done")
+	newPage(7,1)
 	
 }
 
-setTimeout(function(){
-	newPage(4,1)
-},1000);
 
-var myData = function( type, duration, frame, p1, p2, p3, p4, speed){
+
+var myData = function( type, duration, frame, isBroken, leftTopX, leftTopY, rightTopX, rightTopY, rightBottomX, rightBottomY, leftBottomX, leftBottomY, p1, p2, p3, p4, speed){
+
+	this.isBroken = isBroken;
+	this.leftTopX = leftTopX;
+	this.leftTopY = leftTopY;
+	this.rightTopX = rightTopX;
+	this.rightTopY = rightTopY;
+	this.rightBottomX = this.rightBottomY;
+	this.rightBottomY = this.rightBottomY;
+	this.leftBottomX = this.leftBottomX;
+	this.leftBottomY = this.leftBottomY;
 
 	this.type = type;
 	this.duration = duration;
@@ -126,25 +124,21 @@ var myData = function( type, duration, frame, p1, p2, p3, p4, speed){
 
 var myResult = function( data, tester, experiment ){
 
+
 	this.tester = tester;
 	this.experiment = experiment;
+	this.article = articleOrder[tester][experiment]
 	this.title = "Tester " + tester + " - Experiment " + experiment;
 	this.src = "data/" + tester + "-" + experiment;
 	this.data = data;
 
 	this.txtFile = this.src + ".txt";
-	this.imgFile = this.src + ".jpg";
+	this.imgFile = "data/article-" + this.article + ".jpg";
 
-	// get img width and height
-	var self = this;
-	var $img = $("<img />");
-	$img.attr("src", this.imgFile);
-	$img.load(function() {
+	
 
-		self.picWidth  = this.width;   // Note: $(this).width() will not
-		self.picHeight = this.height; // work for in memory images.
-		console.log("ddd",self.picWidth, self.picHeight)
-	}); 
+	this.picWidth  = 600;   // Note: $(this).width() will not
+	this.picHeight = 450;
 
 	this.fixTime = 0;
 	this.fixNum = 0;
@@ -165,11 +159,17 @@ var myResult = function( data, tester, experiment ){
 	this.totalNum = 0;
 	this.totalFrame = 0;
 
+	this.grayTime = 0;
+	this.grayPerc = 0;
+
 }
 myResult.prototype.init = function() {
 
 	// check if data is in view
 	for(var i = 0; i<this.data.length; i++){
+
+		if(this.data[i].isBroken)
+			this.grayTime += this.data[i].duration;
 
 		if(this.data[i].type == 1){
 
@@ -182,6 +182,7 @@ myResult.prototype.init = function() {
 				this.fixTime += this.data[i].duration;
 				this.fixNum ++;
 			}
+
 		}
 		else if(this.data[i].type == 2){
 
@@ -199,11 +200,15 @@ myResult.prototype.init = function() {
 		this.totalNum ++;
 	}
 
+	// 100%
 	this.fixPerc = Math.ceil(this.fixTime / this.totalTime * 100);
 	this.sacPerc = Math.floor(this.sacTime / this.totalTime * 100);
 	this.outPerc = parseInt(this.outTime / this.totalTime * 100);
+	// seperate 100%
+	this.grayPerc = Math.ceil(this.grayTime / this.totalTime * 100);
 
-	this.totalFrame = this.data[i-1].frame;
+
+	this.totalFrame = this.data[this.data.length-1].frame;
 
 	this.fixAvg = this.fixTime / this.fixNum ;
 	this.sacAvg = this.sacTime / this.sacNum ;
@@ -265,12 +270,16 @@ myResult.prototype.ui = function() {
 	if(this.fixTime > this.sacTime){
 
 		$(".mylegend ul li .sac.total").css("width", totalwidth * this.sacTime / this.fixTime + "px");
-		$(".mylegend ul li .red.total").css("width", (totalwidth * this.outTime / this.fixTime)+70 + "px");
+		$(".mylegend ul li .red.total").css("width", (totalwidth * this.outTime / this.fixTime) + "px");
+
+		$(".mylegend ul li .gray.total").css("width", (totalwidth * this.grayTime / this.fixTime) + "px");
 
 	}
 	else{
 		$(".mylegend ul li .fix.total").css("width", totalwidth * this.fixTime / this.sacTime + "px");
-		$(".mylegend ul li .red.total").css("width", (totalwidth * this.outTime / this.sacTime)+70 + "px");
+		$(".mylegend ul li .red.total").css("width", (totalwidth * this.outTime / this.sacTime) + "px");
+
+		$(".mylegend ul li .gray.total").css("width", (totalwidth * this.grayTime / this.sacTime) + "px");
 
 	}
 		
@@ -282,8 +291,8 @@ myResult.prototype.ui = function() {
 		$(".mylegend ul li .fix.total .avg").css("width", avgwidth * this.fixAvg / this.sacAvg + "px");
 		$(".mylegend ul li .red.total .avg").css("width", avgwidth * this.outAvg / this.sacAvg + "px");
 	}
-		
-
+	
+	$(".mylegend ul li .gray.perc .data-perc").html(this.grayPerc + " %");
 
 	$(".mylegend ul li .fix.total .data .data-num").html(this.fixAvg.toFixed(2) + " s");
 	$(".mylegend ul li .fix.perc .data-perc").html(this.fixPerc + " %");
@@ -294,7 +303,6 @@ myResult.prototype.ui = function() {
 	$(".mylegend ul li .sac.perc .data-time").html(getTime(this.sacTime));
 
 
-	$(".mylegend ul li .red.total .data .data-num").html(this.outAvg.toFixed(2) + " s");
 	$(".mylegend ul li .red.perc .data-perc").html(this.outPerc + " %");
 	$(".mylegend ul li .red.perc .data-time").html(getTime(this.outTime));
 
@@ -305,7 +313,6 @@ function getData(tester, experiment){
 
 	var title = "data/" + tester + "-" + experiment;
 	var txtFile = title + ".txt";
-	var imgFile = title + ".jpg";
 
 	var newData = [];
 	count ++;
@@ -321,10 +328,14 @@ function getData(tester, experiment){
         		var arr = elem.split("\t");
 
         		if(arr[0] == 2){
-        			newData.push( new myData(parseInt(arr[0]), parseFloat(arr[1]), parseInt(arr[2]), parseInt(arr[3]), parseInt(arr[4]), parseInt(arr[5]), parseInt(arr[6]), parseInt(arr[7])) );
+        			newData.push( new myData(parseInt(arr[0]), parseFloat(arr[1]), parseInt(arr[2]), parseInt(arr[3]), parseInt(arr[4]), parseInt(arr[5]), parseInt(arr[6]), parseInt(arr[7]),
+        				parseInt(arr[8]), parseInt(arr[9]), parseInt(arr[10]), parseInt(arr[11]), parseInt(arr[12]),
+        				parseInt(arr[13]), parseInt(arr[14]), parseInt(arr[15]), parseInt(arr[16])) );
         		}
         		else if(arr[0] == 1){
-        			newData.push( new myData(parseInt(arr[0]), parseFloat(arr[1]), parseInt(arr[2]), parseInt(arr[3]), parseInt(arr[4])) );
+        			newData.push( new myData(parseInt(arr[0]), parseFloat(arr[1]), parseInt(arr[2]), parseInt(arr[3]), parseInt(arr[4]), parseInt(arr[5]), parseInt(arr[6]), parseInt(arr[7]),
+        				parseInt(arr[8]), parseInt(arr[9]), parseInt(arr[10]), parseInt(arr[11]), parseInt(arr[12]),
+        				parseInt(arr[13])) );
         		}
         	}
 

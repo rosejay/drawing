@@ -11,6 +11,10 @@
 		<link rel="stylesheet" type="text/css" href="css/site.css">
 		<link rel="stylesheet" type="text/css" href="css/main.css">
 
+		<!-- LESS -->
+		<link rel="stylesheet/less" type="text/css" href="css/style.less" />
+		<script type="text/javascript" src="js/less.js"></script>
+
 		<!-- Javascript Lib -->
 		<script type="text/javascript" src="js/jquery-1.9.1.js"></script>
 		<script type="text/javascript" src="/js/lib/arbor.js"></script>
@@ -31,13 +35,85 @@
 
 			<div id="docs" style="opacity: 0; display: none;">
 				<div id="overall">
-					<h2>overall</h2>
+					<div class="overall">
+
+						<div class="chart">
+							<div class="people-chart mychart">
+								<h3>9 Participants</h3>
+								<ul class="person"></ul>
+								<ul class="frequency"></ul>
+								<div class="notes">
+									<p></p>
+									<span class="arrow top"></span>
+								</div>
+								<p class="people-legend">Tablet Use Frequency</p>
+							</div>
+							<div class="article-chart mychart">
+								<h3>3 Articles</h3>
+								<div class="article-legend">
+									<p class="article1">Park<span></span></p>
+									<p class="article2">Hammer<span></span></p>
+									<p class="article3">Graffiti<span></span></p>
+								</div>
+								<ul class="article"></ul>
+								<div class="notes">
+									<p>Same Difficulty</p>
+									<span class="arrow right"></span>
+								</div>
+							</div>
+
+							<div class="task-chart mychart">
+								<h3>3 Tasks</h3>
+								<div class="task-legend">
+									<p class="task1">Sitting<span></span></p>
+									<p class="task2">Basic<span></span></p>
+									<p class="task3">Working<span></span></p>
+								</div>
+								<ul class="task"></ul>
+								<div class="notes">
+									<p>Randomization</p>
+									<span class="arrow left"></span>
+								</div>
+							</div>
+							<div class="clear"></div>
+						</div>
+							
+						<div class="result1">
+							<div class="boxChart-legend">
+								<ul>
+									<li class="color5"><p>5<span></span></p></li>
+									<li class="color4"><p>4<span></span></p></li>
+									<li class="color3"><p>3<span></span></p></li>
+									<li class="color2"><p>2<span></span></p></li>
+									<li class="color1"><p>1<span></span></p></li>
+									<li class="gray"><p>Average<span></span></p></li>
+									<li class="blank"></li>
+									<li class="task1"><p>Sitting<span></span></p></li>
+									<li class="task2"><p>Basic<span></span></p></li>
+									<li class="task3"><p>Walking<span></span></p></li>
+								</ul>
+								<p class="first">Reading</p>
+								<p>Comprehension</p>
+								<p >Results</p>
+							</div>
+							<ul class="boxChart">
+
+							</ul>
+							<div class="clear"></div>
+						</div>
+					</div>
+
+
+
+
+
+
+
 				</div>
 				<div id="tester">
 					<h2>tester</h2>
 				</div>
 				<div id="experiment">
-					<h1>experiment</h1>
 
 					<div class="main">
 						<div class="dataArea fl">
@@ -59,7 +135,11 @@
 												<span class="data-num"></span>
 											</span>
 										</p>
-										<p class="perc fix">80%</p>
+										<p class="perc fix">
+											<span class="data-perc"></span>
+											<span class="data-time"></span>
+										</p>
+										
 									</li>
 									<li>
 										<p class="rect sac"><em></em><span>Saccade</span></p>
@@ -69,22 +149,46 @@
 												<span class="data-num"></span>
 											</span>
 										</p>
-										<p class="perc sac"></p>
+										<p class="perc sac">
+											<span class="data-perc"></span>
+											<span class="data-time"></span>
+										</p>
 									</li>
 									<li>
 										<p class="rect red"><em></em><span>Out View</span></p>
-										<p class="total red"> <span class="avg"></span>
-											<span class="data">
-												<span class="data-title">Avg.</span>
-												<span class="data-num"></span>
-											</span>
+										<p class="total red">
 										</p>
-										<p class="perc red"></p>
+										<p class="perc red">
+											<span class="data-perc"></span>
+											<span class="data-time"></span>
+										</p>
+									</li>
+
+									<li class="t-20">
+										<p class="rect gray"><span>CaliData</span></p>
+										<p class="total gray"> 
+										</p>
+										<p class="perc gray">
+											<span class="data-perc"></span>
+											<span class="data-time"></span>
+										</p>
 									</li>
 								</ul>
 							</div>
+							<div class="clear"></div>
 							<div class="playBar">
-
+								<div class="play playbtn fl"></div>
+								<div class="FrameControl fl">
+									<p class="checkFrame"><span></span>by Frame</p>
+									<div class="checkFrameDiv">
+										<p class="s">0</p>
+										<p class="e">50</p>
+										<p class="c">20</p>
+										<div class="slot">
+											<div class="slider"></div>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
 						<div class="clear"></div>
@@ -130,12 +234,13 @@
 							<p>hello world!</p>
 						</div>
 					</div>
-
 				</div>
 			</div>
 		</div>
 
 
+		<script type="text/javascript" src="js/data.js"></script>
+		<script type="text/javascript" src="js/overall.js"></script>
 		
 		<script type="text/javascript" src="js/main.js"></script>
 		<script type="text/javascript" src="js/controller.js"></script>
