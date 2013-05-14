@@ -22,12 +22,15 @@ var control, tester, comparison;
 initData();
 
 function newPage(tester, experiment){
+	control.dispose();
 	control = new Controller( eyeData[tester][experiment], eyeResult[tester][experiment], tester, experiment );
 }
 function newTester(tester){
+	tester.dispose();
 	tester = new Tester( tester );
 }
 function newComparison(tester){
+	comparison.dispose();
 	comparison = new Comparison( tester );
 }
 
@@ -76,9 +79,16 @@ function initResult(){
 		}
 	}
 	//newPage(7,1)
-	newTester(1);
+	//newTester(1);
 	//newComparison(5);
+	
+
+	control = new Controller( eyeData[0][0], eyeResult[0][0], 0, 0 );
+	tester = new Tester( 1 );
+	comparison = new Comparison( 6 );
+
 	syncData();
+
 }
 
 

@@ -33,6 +33,20 @@ var Tester = function( tester ){
 
 	this.playInterval;
 	this.start();
+	var self = this;
+	$("#tester h3").click(function(){
+		self.count = 0;
+	})
+}
+Tester.prototype.dispose = function() {
+
+	this.canvas.reset();
+	window.clearInterval(this.playInterval);
+
+	$("#tester .testerRight ul li.active").unbind("click");
+	$("#tester .tester-playbtn").unbind("click");
+	$("#tester h3").unbind("click");
+	
 }
 Tester.prototype.start = function() {
 
@@ -41,6 +55,7 @@ Tester.prototype.start = function() {
 	this.ui();
 	this.play();
 	$(".loading").css("display", "none");
+	$("#canvas").css("display", "block");
 }
 Tester.prototype.maxFrame = function() {
 
@@ -55,7 +70,7 @@ Tester.prototype.maxFrame = function() {
 Tester.prototype.ui = function() {
 
 	var self = this;
-	$(".testerRight h3 span").html(this.tester);
+	$("#tester .testerRight h3 span").html(this.tester);
 
 	for(var i = 0; i<experimentNum; i++){
 		if(this.data[i]){
@@ -63,7 +78,7 @@ Tester.prototype.ui = function() {
 		}
 	}
 
-	$(".testerRight ul li.active").click(function(){
+	$("#tester .testerRight ul li.active").click(function(){
 
 		var index = $(this).attr("index");
 		if($(this).hasClass("curTester")){
@@ -76,7 +91,7 @@ Tester.prototype.ui = function() {
 		
 	})
 	
-	$(".tester-playbtn").click(function(){
+	$("#tester .tester-playbtn").click(function(){
 		if($(this).hasClass("stop")){
 			self.stop();
 			$(this).removeClass("stop").addClass("play");
@@ -89,12 +104,12 @@ Tester.prototype.ui = function() {
 }
 Tester.prototype.stop = function() {
 	window.clearInterval(this.playInterval);
-	$(".tester-playbtn").removeClass("stop").addClass("play");
+	$("#tester .tester-playbtn").removeClass("stop").addClass("play");
 }
 Tester.prototype.play = function() {
 	
 	this.stop();
-	$(".tester-playbtn").removeClass("play").addClass("stop");
+	$("#tester .tester-playbtn").removeClass("play").addClass("stop");
 
 	var self = this;
 	
@@ -132,8 +147,8 @@ Tester.prototype.draw = function(frame){
 				
 		}
 	}
-	$(".timeBox p.testerFrame").html(frame);
-	$(".timeBox p.testerTime").html(this.getTime(frame));
+	$("#tester .timeBox p.testerFrame").html(frame);
+	$("#tester .timeBox p.testerTime").html(this.getTime(frame));
 
 			
 

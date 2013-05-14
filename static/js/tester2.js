@@ -33,7 +33,22 @@ var Comparison = function( tester ){
 
 	this.playInterval;
 	this.start();
+
+	var self = this;
+	$("#comparison h3").click(function(){
+		self.count = 0;
+	})
 }
+Comparison.prototype.dispose = function() {
+
+	this.canvas.reset();
+	window.clearInterval(this.playInterval);
+
+	$("#comparison .testerRight ul li.active").unbind("click");
+	$("#comparison .tester-playbtn2").unbind("click");
+	$("#comparison h3").unbind("click");
+}
+
 Comparison.prototype.start = function() {
 
 	this.initShape();
@@ -54,21 +69,21 @@ Comparison.prototype.maxFrame = function() {
 Comparison.prototype.ui = function() {
 
 	var self = this;
-	$(".testerRight h3 span").html(this.tester);
+	$("#comparison .testerRight h3 span").html(this.tester);
 
-	if($(".testerRight ul li.task1").hasClass("active")){
+	if($("#comparison .testerRight ul li.task1").hasClass("active")){
 
 	}
 	for(var i = 0; i<experimentNum; i++){
 		if(this.isTask[i]){
-			$(".testerRight ul li.task"+(i+1)).addClass("active").addClass("curTester");
+			$("#comparison .testerRight ul li.task"+(i+1)).addClass("active").addClass("curTester");
 		}
 		else{
-			$(".testerRight ul li.task"+(i+1)).removeClass("active");
+			$("#comparison .testerRight ul li.task"+(i+1)).removeClass("active");
 		}
 	}
 
-	$(".testerRight ul li.active").click(function(){
+	$("#comparison .testerRight ul li.active").click(function(){
 
 		var index = $(this).attr("index");
 		if($(this).hasClass("curTester")){
@@ -81,10 +96,10 @@ Comparison.prototype.ui = function() {
 		
 	})
 	
-	$(".tester-playbtn2").click(function(){
+	$("#comparison .tester-playbtn2").click(function(){
+		console.log("d")
 		if($(this).hasClass("stop")){
 			self.stop();
-			window.clearInterval(this.playInterval);
 			$(this).removeClass("stop").addClass("play");
 		}
 		else{
@@ -95,12 +110,12 @@ Comparison.prototype.ui = function() {
 }
 Comparison.prototype.stop = function() {
 	window.clearInterval(this.playInterval);
-	$(".tester-playbtn2").removeClass("stop").addClass("play");
+	$("#comparison .tester-playbtn2").removeClass("stop").addClass("play");
 }
 Comparison.prototype.play = function() {
 	
 	this.stop();
-	$(".tester-playbtn2").removeClass("play").addClass("stop");
+	$("#comparison .tester-playbtn2").removeClass("play").addClass("stop");
 
 	var self = this;
 	
@@ -145,8 +160,8 @@ Comparison.prototype.draw = function(frame){
 				
 		}
 	}
-	$(".timeBox p.testerFrame").html(frame);
-	$(".timeBox p.testerTime").html(this.getTime(frame));
+	$("#comparison .timeBox p.testerFrame").html(frame);
+	$("#comparison .timeBox p.testerTime").html(this.getTime(frame));
 
 			
 

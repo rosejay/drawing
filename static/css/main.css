@@ -291,7 +291,7 @@ body{
 	top: 0;
 }
 .timeline .timeData p span{
-	font: 20px HelveticaNeue;
+	font: 20px;
 }
 .timeline .timeData p.first{
 	left: 0px;

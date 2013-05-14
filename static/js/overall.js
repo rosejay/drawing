@@ -352,7 +352,6 @@ function getOverallData(type){
 				while(isExistThisNumber(data,i,j)){
 					data[i][j] += 0.2;
 				}
-				console.log(data[i][j],i,j)
 				minData = 0;
 				maxData = 5;
 			}

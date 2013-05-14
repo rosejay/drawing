@@ -8,7 +8,7 @@ var controlWidth = 1000 ;
 var Controller = function( data, result, tester, experiment ){
 
 	// Frame
-	this.isFrame = true;
+	//this.isFrame = true;
 	this.curFrame = 0;
 	this.segDiv = 0;
 	this.frameWidth = 260;
@@ -52,9 +52,10 @@ var Controller = function( data, result, tester, experiment ){
 	this.playInterval;
 
 	this.canvas = oCanvas.create({
-		canvas: "#canvas",
+		canvas: "#experimentcanvas",
 		fps: 30
 	});
+	this.canvas.reset();
 
 	this.init();
 	this.initShape();
@@ -144,7 +145,7 @@ var Controller = function( data, result, tester, experiment ){
 		self.tempX = 0;
 		self.tempWidth = 0;
 	});
-
+	$("#experiment .play").removeClass("stop");
 	$("#experiment .play").click(function(){
 		
 		if($(this).hasClass("stop")){
@@ -160,7 +161,7 @@ var Controller = function( data, result, tester, experiment ){
 		}
 		
 	})
-
+/*
 	$(".slot .slider").mousedown(function(e){
 
 		if(self.isFrame){
@@ -171,7 +172,7 @@ var Controller = function( data, result, tester, experiment ){
 			self.tempX = $(".slot").offset().left;
 		}
 	})
-
+/*
 	$(".playBar .FrameControl .checkFrame").click(function(e){
 		e.preventDefault();
 		if($(this).hasClass("dis")){
@@ -185,11 +186,28 @@ var Controller = function( data, result, tester, experiment ){
 			self.isFrame = false;
 		}
 
-	})
+	})*/
 }
 Controller.prototype.init = function() {
 
 	this.result.ui();
+
+}
+Controller.prototype.dispose = function() {
+/*
+	var c=document.getElementById("experimentcanvas");
+	var ctx=c.getContext("2d");
+	ctx.clearRect ( 0,0,600,450 );*/
+	this.canvas.reset();
+	window.clearInterval(this.playInterval);
+
+	$("#leftControl").unbind("mousedown");
+	$("#rightControl").unbind("mousedown");
+	$("#midControl").unbind("mousedown");
+	$("body").unbind("mousedown");
+	$("body").unbind("mousemove");
+	$("body").unbind("mouseup");
+	$("#experiment .play").unbind("click");
 
 }
 
@@ -580,15 +598,15 @@ Controller.prototype.play = function() {
 	var self = this;
 	var count = 0;
 	this.playInterval = setInterval(function(){
-
+/*
 		if(self.isFrame){
 			self.leftX += div;
 			self.getRightX();
 		}
-		else{ // by time
+		else{ */// by time
 			self.leftX += div;
 			self.rightX += div;
-		}
+		//}
 		self.check();
 		self.update();
 
@@ -635,18 +653,18 @@ Controller.prototype.adjustFrame = function(x){
 	$(".checkFrameDiv .c").html(this.curFrame).css("left", this.framePos - 10 + "px")
 }
 Controller.prototype.draw = function(){
-
+/*
 	if(this.isFrame){
 		var a = parseInt(this.leftX * this.smallZoomRatio);
 		var startN = this.binarySearch(a);
 		var endN = startN + this.curFrame - 1;
 	}
-	else{
+	else{*/
 		var a = parseInt(this.leftX * this.smallZoomRatio);
 		var b = parseInt(this.rightX * this.smallZoomRatio);
 		var startN = this.binarySearch(a);
 		var endN = this.binarySearch(b);
-	}
+	//}
 
 	this.countFrame(startN, endN);
 	this.setFrame();
