@@ -13,23 +13,39 @@
 @task1: #f3e724;
 @task2: #f3ae24;
 @task3: #e87461;
-/*
+
 @article1: #c6d82a;
 @article2: #a5c536;
 @article3: #86b63e;
-*/
+
+@fixColor: #81c6e0;
+@sacColor: #587391;
+@totalColor: #bbb;
+@scoreColor: #666;
+/*
 @article1: #999;
 @article2: #bbb;
 @article3: #ddd;
+*/
 @noteColor: #999;
 @white: #fff;
+@disColor: #ddd;
 
 @frequency1: #eee;
 @frequency2: #ccc;
 @frequency3: #aaa;
 @frequency4: #888;
 
+@valid: #587391;
+@manual: #8093a8;
+@time: #abb6c1;
+@invalid: #ddd;
 
+@testerColor2: #81c6e0;
+@testerColor1: #587391;
+
+
+@borderColor: #ccc;
 .border(@width) {
 	border: @width solid @blackColor1;
 }
@@ -44,6 +60,14 @@
 }
 
 @leftWidth: 500px;
+
+.loading{
+	width: 800px;
+	height: 400px;
+	display: -webkit-box;
+    -webkit-box-pack: center;
+    -webkit-box-align: center;
+}
 .clear{
 	clear: both;
 }
@@ -57,9 +81,295 @@
 	.result1{
 		width: 445px;
 		margin: 20px auto;
+		float: left;
+		.resultTitle{
+			margin-left: 37px;
+		}
 	}
+	.result2{
+		width: 710px;
+		height: 540px;
+		margin: 20px auto;
+		h3{
+			width: 500px;
+			height: 30px;
+			float: left;
+
+		}
+		#datadiv{
+			border: 1px solid #eee;
+			float: left;
+		}
+		ul.choose-bar{
+			width: 180px;
+			float: left;
+			margin-left: -1px;
+			position: relative;
+			.backgroundBox{
+				position: absolute;
+				width: 200px;
+				height: 60px;
+				-webkit-transition: top 0.2s ease-in-out;
+				-moz-transition: top 0.2s ease-in-out;
+				-o-transition: top 0.2s ease-in-out;
+				transition: top 0.2s ease-in-out;
+				top: -1px;
+				left: -1px;
+				span.arrow.left{
+					display: block;
+					border: 10px dashed transparent;
+					position: absolute;
+					top: 20px;
+					height: 0;
+					width: 0;
+					font: 0;
+					line-height: 0;
+					_clear: both;
+					left: -20px;
+					border-right: 10px solid #fff;
+				}
+				span.arrow.left.bottom{
+					border: 11px dashed transparent;
+					top: 19px;
+					left: -22px;
+				}
+			}
+			.backgroundBox.fix{
+				border-left: 1px solid @fixColor;
+				span.arrow.left.bottom{
+					border-right: 11px solid @fixColor;
+				}
+			}
+			.backgroundBox.sac{
+				border-left: 1px solid @sacColor;
+				span.arrow.left.bottom{
+					border-right: 11px solid @sacColor;
+				}
+			}
+			.backgroundBox.total{
+				border-left: 1px solid @totalColor;
+				span.arrow.left.bottom{
+					border-right: 11px solid @totalColor;
+				}
+			}
+			.backgroundBox.score{
+				border-left: 1px solid @scoreColor;
+				span.arrow.left.bottom{
+					border-right: 11px solid @scoreColor;
+				}
+			}
+			li{
+				width: 100%;
+				padding: 10px;
+				height: 40px;
+				cursor: pointer;
+				line-height: 40px;
+				font-size: 18px;
+				position: relative;
+				p{
+					color: #ddd;
+					span{
+						background: #ddd;
+						width: 20px;
+						height: 20px;
+						margin: 10px;
+						display: inline-block;
+						float: left;
+					}
+				}
+				p:hover{
+					color: #ccc;
+					span{
+						background: #ccc;
+					}
+				}
+				
+			}
+			li.cur{
+				background: #fff;
+				
+			}
+			li.fix.cur{
+				p{
+					color: @fixColor;
+					span{
+						background: @fixColor;
+					}
+				}
+			}
+			li.sac.cur{
+				p{
+					color: @sacColor;
+					span{
+						background: @sacColor;
+					}
+				}
+			}
+			li.total.cur{
+				p{
+					color: @totalColor;
+					span{
+						background: @totalColor;
+					}
+				}
+			}
+			li.score.cur{
+				p{
+					color: @scoreColor;
+					span{
+						background: @scoreColor;
+					}
+				}
+			}
+			li.blank{
+				height: 70px;
+			}
+			li.stat{
+				padding: 0 0 0 15px;
+				width: 100%;
+				height: 20px;
+				line-height: 20px;
+				font-size: 16px;
+				margin-bottom: 5px;
+				p{
+					span{
+						margin: 0 5px;
+					}
+				}
+			}
+			li.stat.task1{
+				p{
+					color: @task1;
+					span{
+						background: @task1;
+					}
+				}
+			}
+			li.stat.task2{
+				p{
+					color: @task2;
+					span{
+						background: @task2;
+					}
+				}
+			}
+			li.stat.task3{
+				p{
+					color: @task3;
+					span{
+						background: @task3;
+					}
+				}
+			}
+		}
+	}
+	
+}
+.block{
+	width: 650px;
+	height: 600px;
+	margin: 20px auto;
+}
+.resultTitle{
+	width: 100%;
+	line-height: 40px;
+	font-size: 25px;
+	margin: 20px 0;
+	text-align: center;
 }
 
+		
+.mydata{
+	width: 190px;
+	margin: 20px 0 0 0;
+	float: left;
+	.resultTitle{
+		margin-top: 105px;
+	}
+	.isData-legend{
+		width: 80px;
+		margin-top: 13px;
+		p.valid{
+			color: @valid;
+			span{
+				background: @valid;
+			}
+		}
+		p.manual{
+			color: @manual;
+			span{
+				background: @manual;
+			}
+		}
+		p.time{
+			color: @time;
+			span{
+				background: @time;
+			}
+		}
+		p.invalid{
+			color: @invalid;
+			span{
+				background: @invalid;
+			}
+		}
+	}
+	ul{
+		float: left;
+		width: 100px;
+		height: 300px;
+		li{
+			width: 100%;
+			height: 30px;
+			margin-bottom: 1px;
+			ul{
+				width: 100%;
+				height: 100%;
+				li{
+					width: 30px;
+					height: 100%;
+					margin-right: 1px;
+					float: left;
+					
+				}
+				li.valid{
+					background: @valid;
+					cursor: pointer;
+				}
+				li.manual{
+					background: @manual;
+					cursor: pointer;
+				}
+				li.time{
+					background: @time;
+				}
+				li.invalid{
+					background: @invalid;
+				}
+			}
+		}
+		li.title{
+			margin-bottom: 5px;
+			height: 8px;
+			ul{
+				height: 100%;
+				li{
+					height: 100%;
+				}
+				li.task1{
+					background: @task1;
+				}
+				li.task2{
+					background: @task2;
+				}
+				li.task3{
+					background: @task3;
+				}
+			}
+		}
+	}
+
+}
 .mychart{
 	width: @leftWidth;
 	float: left;
@@ -405,7 +715,7 @@
 	width: 120px;
 	margin-right: 10px;
 	float: left;
-	padding: 98px 0 20px 20px;
+	padding: 98px 0 0 0;
 	p{
 		text-align: right;
 		font-size: 16px;
@@ -509,14 +819,57 @@
 				background: @task3;
 			}
 		}
+		div.showArticle{
+			cursor: pointer;
+			li{
+				cursor: pointer;
+			}
+			li.article1{
+				p{
+					color: @article1;
+				}
+				span{
+					background: @article1;
+				}
+			}
+			li.article2{
+				p{
+					color: @article2;
+				}
+				span{
+					background: @article2;
+				}
+			}
+			li.article3{
+				p{
+					color: @article3;
+				}
+				span{
+					background: @article3;
+				}
+			}
+		}
+		div.dis.showArticle{
+			li{
+				p{
+					color: @disColor;
+				}
+				span{
+					background: @disColor;
+				}
+			}
+		}
+		
 	}
 }
 ul.boxChart{
+
 	float: left;
 	width: (@boxWidth * @experimentNum + @experimentNum + 130);
 	height: (@boxWidth * @testerNum + @testerNum + 80);
 	padding: 20px;
 	.border(1px);
+	
 	li{
 		width: 100%;
 		height: @boxWidth;
@@ -532,6 +885,44 @@ ul.boxChart{
 				height: @boxWidth; 
 				margin: 0 1px 0 0;
 				float: left;
+				position: relative;
+				cursor: pointer;
+				p{
+					display: none;
+					line-height: (@boxWidth - 5);
+					height: (@boxWidth - 10);
+					width: @boxWidth;
+					color: #fff;
+					text-align: center;
+					font-size: 15px;
+					-webkit-transition: all 0.2s ease-in-out;
+					-moz-transition: all 0.2s ease-in-out;
+					-o-transition: all 0.2s ease-in-out;
+					transition: all 0.2s ease-in-out;
+				}
+				p.article{
+					position: absolute;
+					bottom: 0;
+					left: 0;
+					width: @boxWidth;
+					height: 10px;
+					display: none;
+				}
+				p.article1{
+					background: @article1;
+				}
+				p.article2{
+					background: @article2;
+				}
+				p.article3{
+					background: @article3;
+				}
+
+			}
+			li:hover{
+				p{
+					display: block !important;
+				}
 			}
 			li.color5{
 				background: @color5;
@@ -566,6 +957,8 @@ ul.boxChart{
 					background: @blackColor1;
 				}
 				p{
+					color: @blackColor2;
+					display: block;
 					float: left;
 					line-height: @boxWidth;
 					margin-left: 5px;
@@ -585,6 +978,7 @@ ul.boxChart{
 				div{
 					width: 100%;
 					p{
+						display: block;
 						text-align: center;
 						width: 100%;
 					}
@@ -672,6 +1066,138 @@ ul.boxChart{
 	}
 }
 
-
+.mymylegend{
+	width: 120px;
+	margin-right: 10px;
+	float: left;
+	p{
+		width: 100%;
+		float: left;
+		line-height: 20px;
+		height: 20px;
+		text-align: right;
+		margin-bottom: 5px;
+		span{
+			width: 20px;
+			height: 20px;
+			display: inline-block;
+			float: right;
+			margin-left: 5px;
+		}
+	}
+}
+	
 	
 
+
+
+.testerBox{
+	width: 1000px;
+	margin: 20px auto;
+	#ipadcanvas, #threecanvas{
+		width: 640px;
+		height: 480px;
+		border: 2px solid #eee;
+		float: left;
+	}
+	.testerRight{
+		width: 300px;
+		margin-left: 20px;
+		float: left;
+		position: relative;
+		.timeBox{
+			margin-top: 270px;
+			width: 100%;
+			p{
+				line-height: 30px;
+				font-size: 20px;
+				float: left;
+				width: 160px;
+			}
+			.tester-playbtn,.tester-playbtn2{
+				float: left;
+				margin-right: 15px;
+				width: 60px;
+				height: 60px;
+				background: url("../img/play.png") 0 0 no-repeat;
+				cursor: pointer;
+			}
+			.tester-playbtn,.tester-playbtn2{
+				background-position: 0 0;
+			}
+			.tester-playbtn:hover,.tester-playbtn2:hover{
+				background-position: 0 -60px;
+			}
+			.tester-playbtn.stop,.tester-playbtn2.stop{
+				background-position: 0 -120px;
+			}
+			.tester-playbtn.stop:hover,.tester-playbtn2.stop:hover{
+				background-position: 0 -180px;
+			}
+		}
+			
+		h3{
+			font-size: 25px;
+			line-height: 40px;
+			height: 40px;
+			margin-bottom: 20px;
+		}
+		ul{
+			width: 100%;
+			margin-bottom: 20px;
+			li{
+				width: 260px;
+				padding: 10px 0;
+				margin-bottom: 15px;
+				border-left: 3px solid rgba(0,0,0,0);
+				display: none;
+				p{
+					float: left;
+					font-size: 18px;
+					line-height: 20px;
+					span{
+						float: left;
+						width: 20px;
+						height: 20px;
+						display: inline-block;
+						margin: 0 10px 0 0;
+					}
+				}
+			}
+			li.active{
+				cursor: pointer;
+				display: block;
+				p{
+					color: #ccc;
+					span{
+						background: #ccc;
+					}
+				}
+			}
+			li.active.task1.curTester{
+				p{
+					color: @testerColor1;
+					span{
+						background: @testerColor1;
+					}
+				}
+			}
+			li.active.task2.curTester{
+				p{
+					color: @testerColor2;
+					span{
+						background: @testerColor2;
+					}
+				}
+			}
+			li.active.task3.curTester{
+				p{
+					color: @article3;
+					span{
+						background: @article3;
+					}
+				}
+			}
+		}
+	}
+}

@@ -20,6 +20,7 @@
 		<script type="text/javascript" src="/js/lib/arbor.js"></script>
 		<script type="text/javascript" src="/js/lib/arbor-tween.js"></script>
 		<script type="text/javascript" src="/js/lib/arbor-graphics.js"></script>
+		<script type="text/javascript" src="/js/raphael-min.js"></script>
 
 				
 		<script type="text/javascript" src="js/ocanvas-2.4.0.js"></script>
@@ -31,6 +32,7 @@
 				<a class="back" href="#"></a>
 				<p style="opacity: 1; display: block;">Eye Tracker Experiment</p>
 			</div>
+			<div class="loading">Loading...</div>
 			<canvas id="sitemap" width="1242" height="357" style="opacity: 1;" class=""></canvas>
 
 			<div id="docs" style="opacity: 0; display: none;">
@@ -52,8 +54,8 @@
 								<h3>3 Articles</h3>
 								<div class="article-legend">
 									<p class="article1">Park<span></span></p>
-									<p class="article2">Hammer<span></span></p>
-									<p class="article3">Graffiti<span></span></p>
+									<p class="article2">Graffiti<span></span></p>
+									<p class="article3">Hammer<span></span></p>
 								</div>
 								<ul class="article"></ul>
 								<div class="notes">
@@ -65,8 +67,8 @@
 							<div class="task-chart mychart">
 								<h3>3 Tasks</h3>
 								<div class="task-legend">
-									<p class="task1">Sitting<span></span></p>
-									<p class="task2">Basic<span></span></p>
+									<p class="task1">Basic<span></span></p>
+									<p class="task2">Sitting<span></span></p>
 									<p class="task3">Working<span></span></p>
 								</div>
 								<ul class="task"></ul>
@@ -77,29 +79,83 @@
 							</div>
 							<div class="clear"></div>
 						</div>
-							
-						<div class="result1">
-							<div class="boxChart-legend">
-								<ul>
-									<li class="color5"><p>5<span></span></p></li>
-									<li class="color4"><p>4<span></span></p></li>
-									<li class="color3"><p>3<span></span></p></li>
-									<li class="color2"><p>2<span></span></p></li>
-									<li class="color1"><p>1<span></span></p></li>
-									<li class="gray"><p>Average<span></span></p></li>
-									<li class="blank"></li>
-									<li class="task1"><p>Sitting<span></span></p></li>
-									<li class="task2"><p>Basic<span></span></p></li>
-									<li class="task3"><p>Walking<span></span></p></li>
-								</ul>
-								<p class="first">Reading</p>
-								<p>Comprehension</p>
-								<p >Results</p>
-							</div>
-							<ul class="boxChart">
+						<div class="block">
 
+							<div class="mydata">
+								<h3 class="resultTitle">Data</h3>
+								<div class="isData-legend mymylegend">
+									<p class="valid">Valid <em></em><span></span></p>
+									<p class="manual">Manual <em></em><span></span></p>
+									<p class="time">Time <em></em><span></span></p>
+									<p class="invalid">Invalid <em></em><span></span></p>
+								</div>
+								<ul class="isDataChart">
+
+								</ul>
+								<div class="clear"></div>
+							</div>
+							<div class="result1">
+								<h3 class="resultTitle">Reading Comprehension</h3>
+								<div class="boxChart-legend">
+									<ul>
+										<li class="color5"><p>5<span></span></p></li>
+										<li class="color4"><p>4<span></span></p></li>
+										<li class="color3"><p>3<span></span></p></li>
+										<li class="color2"><p>2<span></span></p></li>
+										<li class="color1"><p>1<span></span></p></li>
+										<li class="gray"><p>Average<span></span></p></li>
+										<li class="blank"></li>
+										<li class="task1"><p>Basic<span></span></p></li>
+										<li class="task2"><p>Sitting<span></span></p></li>
+										<li class="task3"><p>Walking<span></span></p></li>
+										<li class="blank"></li>
+										<div class="showArticle dis">
+											<li class="article1"><p>Park<span></span></p></li>
+											<li class="article2"><p>Graffiti<span></span></p></li>
+											<li class="article3"><p>Hammer<span></span></p></li>
+										</div>
+										
+
+
+									</ul>
+									
+								</div>
+								<ul class="boxChart">
+
+								</ul>
+								<div class="clear"></div>
+							</div>
+
+							<div clss="clear"></div>
+
+						</div>
+
+						<div class="result2">
+							<h3 class="resultTitle">Data Analysis</h3>
+							<div id="datadiv"></div>
+							<ul class="choose-bar">
+								<li class="fix">
+									<p><span></span>Fixation %</p>
+								</li>
+								<li class="sac cur">
+									<p><span></span>Saccade %</p>
+								</li>
+								<li class="total">
+									<p><span></span>Overall Time s</p>
+								</li>
+								<li class="score">
+									<p><span></span>Score </p>
+								</li>
+								<div class="backgroundBox sac">
+									<span class="arrow left bottom"></span>
+									<span class="arrow left"></span>
+								</div>
+								<li class="blank"></li>
+								<li class="task1 stat"><p><span></span>Basic</p></li>
+								<li class="task2 stat"><p><span></span>Sitting</p></li>
+								<li class="task3 stat"><p><span></span>Walking</p></li>
 							</ul>
-							<div class="clear"></div>
+							<div clss="clear"></div>
 						</div>
 					</div>
 
@@ -110,15 +166,59 @@
 
 
 				</div>
+				<div id="comparison">
+
+					<div class="testerBox">
+				        <canvas id="threecanvas" width="600" height="450"></canvas>
+
+				        <div class="testerRight">
+				          <h3>Tester - <span></span></h3>
+				          <ul>
+				            <li class="task1" index="0"><p><span></span>Basic</p></li>
+				            <li class="task2" index="1"><p><span></span>Sitting</p></li>
+				            <li class="task3" index="2"><p><span></span>Walking</p></li>
+				          </ul>
+				          <div class="timeBox">
+				            <div class="tester-playbtn2 stop"></div>
+				            <p class="testerFrame"></p>
+				            <p class="testerTime"></p>
+				          </div>
+				          
+				        </div>
+				          
+				    </div>
+
+				</div>
 				<div id="tester">
-					<h2>tester</h2>
+					
+					<div class="testerBox">
+				        <canvas id="ipadcanvas" width="640" height="480"></canvas>
+
+				        <div class="testerRight">
+				          <h3>Tester - <span></span></h3>
+				          <ul>
+				            <li class="task1" index="0"><p><span></span>Basic</p></li>
+				            <li class="task2" index="1"><p><span></span>Sitting</p></li>
+				            <li class="task3" index="2"><p><span></span>Walking</p></li>
+				          </ul>
+				          <div class="timeBox">
+				            <div class="tester-playbtn stop"></div>
+				            <p class="testerFrame"></p>
+				            <p class="testerTime"></p>
+				          </div>
+				          
+				        </div>
+				          
+				      </div>
+
+
 				</div>
 				<div id="experiment">
 
 					<div class="main">
 						<div class="dataArea fl">
 							<img id="sourceImg" src=""/>
-							<canvas id="canvas" width="200" height="200"></canvas>
+							<canvas id="canvas" width="600" height="450"></canvas>
 						</div>
 						<div class="dataChart fl">
 
@@ -241,7 +341,9 @@
 
 		<script type="text/javascript" src="js/data.js"></script>
 		<script type="text/javascript" src="js/overall.js"></script>
-		
+		<script type="text/javascript" src="js/tester.js"></script>
+		<script type="text/javascript" src="js/tester2.js"></script>
+
 		<script type="text/javascript" src="js/main.js"></script>
 		<script type="text/javascript" src="js/controller.js"></script>
 		<script type="text/javascript" src="js/site.js"></script>

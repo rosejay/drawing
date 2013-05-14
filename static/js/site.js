@@ -63,6 +63,7 @@
             sys.screen({size:{width:canvas.width, height:canvas.height}})
 
 
+
         _vignette = null
         that.redraw()
       },
@@ -174,7 +175,8 @@
             return false
           },
           clicked:function(e){
-            console.log("click")
+            $("ul.choose-bar li.fix").click();
+
             var pos = $(canvas).offset();
             _mouseP = arbor.Point(e.pageX-pos.left, e.pageY-pos.top)
             nearest = dragged = sys.nearest(_mouseP);
@@ -186,6 +188,10 @@
                  var arr = link.split("-");
                  if(link.substr(1,6) == "tester"){
                   tester = arr[1];
+                 }
+                 if(link.substr(1,10) == "comparison"){
+                  tester = arr[1];
+                  newComparison(tester);
                  }
                  else if(link.substr(1,10) == "experiment"){
                    tester = arr[1];
@@ -328,10 +334,11 @@
             $(this).hide()
             $(that).trigger({type:'mode', mode:'visible', dt:dt})
           })
-          document.title = "arbor.js"
+          document.title = "Eye Tracker Experiment"
           break
           
           case 'overall':
+          case 'comparison':
           case 'tester':
           case 'experiment':
           $(that).trigger({type:'mode', mode:'hidden', dt:dt})
@@ -341,7 +348,7 @@
                     
           $('#docs').find(">div").hide()
           $('#docs').find('#'+_path).show()
-          document.title = "arbor.js » " + _path
+          document.title = "Eye Tracker Experiment » " + _path
           break
         }
         
@@ -372,12 +379,12 @@ var experiment = 0;
 var theUI = {"nodes": 
   {"Eye Tracker Experiment":{"color":CLR.center, "shape":"dot", "alpha":1, "link":"#overall"},
    "Tester 0":{"color": CLR.testerDis, "shape":"dot", "alpha": 1 },
-   "Experiment 00":{"color": CLR.experiment, "alpha": 0, "link":"#experiment-0-0"},
-   "Experiment 01":{"color": CLR.experimentDis, "alpha": 0 },
+   "Experiment 00":{"color": CLR.experiment, "alpha": 0, "link":"#experiment-0-0" },
+   "Experiment 01":{"color": CLR.experiment, "alpha": 0, "link":"#experiment-0-1" },
    "Experiment 02":{"color": CLR.experimentDis, "alpha": 0 },
-   "Tester 1":{"color": CLR.testerDis, "shape":"dot", "alpha": 1 },
+   "Tester 1":{"color": CLR.tester, "shape":"dot", "alpha": 1, "link":"#tester-1" },
    "Experiment 10":{"color": CLR.experiment, "alpha": 0, "link":"#experiment-1-0"},
-   "Experiment 11":{"color": CLR.experimentDis, "alpha": 0 },
+   "Experiment 11":{"color": CLR.experiment, "alpha": 0, "link":"#experiment-1-1"},
    "Experiment 12":{"color": CLR.experimentDis, "alpha": 0 },
    "Tester 2":{"color": CLR.testerDis, "shape":"dot", "alpha": 1 },
    "Experiment 20":{"color": CLR.experiment, "alpha": 0, "link":"#experiment-2-0"},
@@ -387,16 +394,16 @@ var theUI = {"nodes":
    "Experiment 30":{"color": CLR.experimentDis, "alpha": 0 },
    "Experiment 31":{"color": CLR.experimentDis, "alpha": 0 },
    "Experiment 32":{"color": CLR.experimentDis, "alpha": 0 },
-   "Tester 4":{"color": CLR.tester, "shape":"dot", "alpha": 1, "link":"#tester-4"},
+   "Tester 4":{"color": CLR.tester, "shape":"dot", "alpha": 1, "link":"#comparison-4"},
    "Experiment 40":{"color": CLR.experiment, "alpha": 0, "link":"#experiment-4-0"},
    "Experiment 41":{"color": CLR.experiment, "alpha": 0, "link":"#experiment-4-1"},
    "Experiment 42":{"color": CLR.experiment, "alpha": 0, "link":"#experiment-4-2"},
-   "Tester 5":{"color": CLR.tester, "shape":"dot", "alpha": 1, "link":"#tester-5"},
+   "Tester 5":{"color": CLR.tester, "shape":"dot", "alpha": 1, "link":"#comparison-5"},
    "Experiment 50":{"color": CLR.experiment, "alpha": 0, "link":"#experiment-5-0"},
    "Experiment 51":{"color": CLR.experiment, "alpha": 0, "link":"#experiment-5-1"},
    "Experiment 52":{"color": CLR.experiment, "alpha": 0, "link":"#experiment-5-2"},
-   "Tester 6":{"color": CLR.tester, "shape":"dot", "alpha": 1, "link":"#tester-6"},
-   "Experiment 60":{"color": CLR.experiment, "alpha": 0, "link":"#experiment-6-0"},
+   "Tester 6":{"color": CLR.tester, "shape":"dot", "alpha": 1, "link":"#comparison-6"},
+   "Experiment 60":{"color": CLR.experimentDis, "alpha": 0 },
    "Experiment 61":{"color": CLR.experiment, "alpha": 0, "link":"#experiment-6-1"},
    "Experiment 62":{"color": CLR.experiment, "alpha": 0, "link":"#experiment-6-2"},
    "Tester 7":{"color": CLR.testerDis, "shape":"dot", "alpha": 1 },

@@ -28,7 +28,7 @@ var Controller = function( data, result, tester, experiment ){
 	this.isMoveRight = false;
 	this.isMoveMid = false;
 	this.leftX = 0;
-	this.rightX = 20;
+	this.rightX = 15;
 
 	this.mouseX = 0;
 	this.tempX = 0;
@@ -36,7 +36,6 @@ var Controller = function( data, result, tester, experiment ){
 	// ui
 	this.width = controlWidth;
 	this.controlWidth = 10;
-	console.log(this.data.length)
 	this.max = this.data[this.data.length - 1].frame;
 	this.smallZoomRatio = this.max / this.width;
 	this.bigZoomRatio = 0;
@@ -52,6 +51,10 @@ var Controller = function( data, result, tester, experiment ){
 
 	this.playInterval;
 
+	this.canvas = oCanvas.create({
+		canvas: "#canvas",
+		fps: 30
+	});
 
 	this.init();
 	this.initShape();
@@ -142,7 +145,7 @@ var Controller = function( data, result, tester, experiment ){
 		self.tempWidth = 0;
 	});
 
-	$(".play").click(function(){
+	$("#experiment .play").click(function(){
 		
 		if($(this).hasClass("stop")){
 			// stop
@@ -192,6 +195,8 @@ Controller.prototype.init = function() {
 
 Controller.prototype.initShape = function() {
 
+    var self = this;
+
 	for(var i = 0; i< this.data.length; i++){
 
 		// draw
@@ -208,7 +213,7 @@ Controller.prototype.initShape = function() {
 			}
 				
 
-			var line = canvas.display.line({
+			var line = this.canvas.display.line({
 				start: { x: this.data[i].startX, y: this.data[i].startY },
 				end: { x: this.data[i].endX, y: this.data[i].endY },
 				stroke: "5px " + color,
@@ -225,7 +230,7 @@ Controller.prototype.initShape = function() {
 			else 
 				rotation += 180;
 
-			var triangle = canvas.display.polygon({
+			var triangle = this.canvas.display.polygon({
 				x: this.data[i].endX,
 				y: this.data[i].endY,
 				sides: 3,
@@ -237,31 +242,14 @@ Controller.prototype.initShape = function() {
 
 			triangle.bind("mouseenter touchenter", function () {
 				this.radius = this.radius + 3;
-				canvas.redraw();
+				self.canvas.redraw();
 			}).bind("mouseleave touchleave", function () {
 				this.radius = this.radius - 3;
-				canvas.redraw();
+				self.canvas.redraw();
 			}).bind("click tap", function () {
 				
 			});
 
-			/*
-			var ellipse = canvas.display.ellipse({
-				x: this.data[i].startX,
-				y: this.data[i].startY,
-				radius: 8,
-				fill:color
-			});
-			this.data[i].shape.push(ellipse);
-
-			var ellipse = canvas.display.ellipse({
-				x: this.data[i].endX,
-				y: this.data[i].endY,
-				radius: 8,
-				fill: color
-			});
-			this.data[i].shape.push(ellipse);
-*/
 		}
 		else if(this.data[i].type == 1){
 
@@ -277,7 +265,7 @@ Controller.prototype.initShape = function() {
 				
 
 			var radius = parseInt(this.data[i].duration * 50);
-        	var ellipse = canvas.display.ellipse({
+        	var ellipse = this.canvas.display.ellipse({
 				x: this.data[i].startX,
 				y: this.data[i].startY,
 				radius: radius,
@@ -287,10 +275,10 @@ Controller.prototype.initShape = function() {
 
         	ellipse.bind("mouseenter touchenter", function () {
 				this.radius = this.radius + 3;
-				canvas.redraw();
+				self.canvas.redraw();
 			}).bind("mouseleave touchleave", function () {
 				this.radius = this.radius - 3;
-				canvas.redraw();
+				self.canvas.redraw();
 			}).bind("click tap", function () {
 				
 			});
@@ -334,16 +322,14 @@ Controller.prototype.getTime = function(item){
 
 	var minute = parseInt(item/60);
 	var second = parseInt(item%60);
-	var misecond = parseInt( (item - parseInt(item)) * 60 );
+	var misecond = parseInt( (item - parseInt(item)) * 10 );
 
 	if(minute < 10)
 		minute = "0" + minute;
 	if(second < 10)
 		second = "0" + second;
-	if(misecond < 10)
-		misecond = "0" +  misecond;
 
-	return minute + ":" + second + ":" + misecond;
+	return minute + ":" + second + "." + misecond;
 }
 Controller.prototype.binarySearch = function(n){
 
@@ -664,19 +650,14 @@ Controller.prototype.draw = function(){
 
 	this.countFrame(startN, endN);
 	this.setFrame();
-	
+
 	var FrameNum = 0;
 	var FrameTime = 0;
 	var startFrame = 0;
 	var endFrame = 0;
 	var isStart = false;
 
-	canvas.reset();
-
-	var children = canvas.children;
-	for (var i = 0; i < children.length; i++) {
-		children[i].remove();
-	}
+	this.canvas.reset();
 
 	for(var i = startN; i< endN; i++){
 
@@ -692,8 +673,7 @@ Controller.prototype.draw = function(){
 		if( (!this.data[i].isIn && this.isOut) || 
 			(this.isFix && this.data[i].type == 1) || (this.isSac && this.data[i].type == 2) )
 			for(var n = 0; n<this.data[i].shape.length; n++){
-				canvas.addChild(this.data[i].shape[n]);
-				console.log(canvas.children.length,"end")
+				this.canvas.addChild(this.data[i].shape[n]);
 
 			}
 

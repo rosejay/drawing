@@ -6,49 +6,30 @@ var totalwidth = 210;
 var avgwidth = 30;
 
 var picWidth, picHeight;
-var canvas;
-
+/*
 
 var c=document.getElementById("canvas");
 var ctx=c.getContext("2d");
 ctx.fillStyle="#FF0000";
-
-
+ctx.scale(2, 2);
+*/
 
 var eyeData = [];
 var eyeResult = [];
 var count = 0;
-var control;
+var control, tester, comparison;
 
-/*
-$("#sourceImg").attr("src", imgFile);
-$("#sourceImg").load(function() {
-
-	picWidth  = this.width;   // Note: $(this).width() will not
-	picHeight = this.height; // work for in memory images.
-	$("#canvas").attr("width", picWidth);
-	$("#canvas").attr("height", picHeight);
-
-
-	$(".dataArea").css("width", picWidth).css("height", picHeight).css("zoom", 0.8);
-
-	canvas = oCanvas.create({
-		canvas: "#canvas",
-		fps: 10
-	});
-
-	
-	
-
-}); 
-*/
 initData();
 
 function newPage(tester, experiment){
 	control = new Controller( eyeData[tester][experiment], eyeResult[tester][experiment], tester, experiment );
 }
-
-
+function newTester(tester){
+	tester = new Tester( tester );
+}
+function newComparison(tester){
+	comparison = new Comparison( tester );
+}
 
 
 
@@ -63,7 +44,8 @@ function initData(){
 		for(var j = 0; j < experimentNum; j++){
 			eyeData[i][j] = [];
 			if(isExist[i][j])
-				getData(i,j);
+				getData(i,j,isExist[i][j]);
+			
 			//tempData.push("experiment-" + i + "-" + j);
 
 		}
@@ -84,35 +66,55 @@ function initResult(){
 		eyeResult[i] = [];
 		for(var j = 0; j < experimentNum; j++){
 			if(isExist[i][j]){
-				eyeResult[i][j] = new myResult( eyeData[i][j], i, j );
+				eyeResult[i][j] = new myResult( eyeData[i][j], i, j, isExist[i][j]);
 				eyeResult[i][j].init();
 			}
-			
+			else{
+
+			}
 			//eyeResult[i][j].ui();
 		}
 	}
-	newPage(7,1)
-	
+	//newPage(7,1)
+	newTester(1);
+	//newComparison(5);
+	syncData();
 }
 
 
 
-var myData = function( type, duration, frame, isBroken, leftTopX, leftTopY, rightTopX, rightTopY, rightBottomX, rightBottomY, leftBottomX, leftBottomY, p1, p2, p3, p4, speed){
+var myData = function( dataType, type, duration, frame, isBroken, leftTopX, leftTopY, rightTopX, rightTopY, rightBottomX, rightBottomY, leftBottomX, leftBottomY, p1, p2, p3, p4, speed, originalX, originalY, originalXX, originalYY){
+
+	this.dataType = dataType;
 
 	this.isBroken = isBroken;
-	this.leftTopX = leftTopX;
-	this.leftTopY = leftTopY;
-	this.rightTopX = rightTopX;
-	this.rightTopY = rightTopY;
-	this.rightBottomX = this.rightBottomY;
-	this.rightBottomY = this.rightBottomY;
-	this.leftBottomX = this.leftBottomX;
-	this.leftBottomY = this.leftBottomY;
+
+	this.leftTopX = parseInt(leftTopX*0.5);
+	this.leftTopY = parseInt(leftTopY*0.5);
+	this.rightTopX = parseInt(rightTopX*0.5);
+	this.rightTopY = parseInt(rightTopY*0.5);
+	this.rightBottomX = parseInt(rightBottomX*0.5);
+	this.rightBottomY = parseInt(rightBottomY*0.5);
+	this.leftBottomX = parseInt(leftBottomX*0.5);
+	this.leftBottomY = parseInt(leftBottomY*0.5);
 
 	this.type = type;
 	this.duration = duration;
 	this.frame = frame;
 	this.startX = p1;
+
+	if(this.type == 1){
+		this.originalX = parseInt(p3*0.5);
+		this.originalY = parseInt(p4*0.5);
+	}
+	else{
+		this.originalX = parseInt(originalX*0.5);
+		this.originalY = parseInt(originalY*0.5);
+		this.originalXX = parseInt(originalXX*0.5);
+		this.originalYY = parseInt(originalYY*0.5);
+	}
+	//console.log(this.originalX, this.originalY)
+	
 	this.startY = p2;
 
 	this.endX = p3;
@@ -120,15 +122,28 @@ var myData = function( type, duration, frame, isBroken, leftTopX, leftTopY, righ
 	this.speed = speed;
 	this.isIn = true;
 	this.shape = [];
+	this.testerShape = [];
 }
 
-var myResult = function( data, tester, experiment ){
 
+var myResult = function( data, tester, experiment, dataType ){
 
+	this.dataType = dataType;
 	this.tester = tester;
 	this.experiment = experiment;
 	this.article = articleOrder[tester][experiment]
-	this.title = "Tester " + tester + " - Experiment " + experiment;
+
+	if(this.experiment == 0){
+		var str = "Basic";
+	}
+	else if(this.experiment == 1){
+		var str = "Sitting";
+	}
+	else if(this.experiment == 2){
+		var str = "Walking"
+	}
+
+	this.title = "Tester " + tester + " - " + str;
 	this.src = "data/" + tester + "-" + experiment;
 	this.data = data;
 
@@ -178,10 +193,10 @@ myResult.prototype.init = function() {
 				this.outTime += this.data[i].duration;
 				this.outNum ++;
 			}
-			else{
-				this.fixTime += this.data[i].duration;
-				this.fixNum ++;
-			}
+			
+			this.fixTime += this.data[i].duration;
+			this.fixNum ++;
+			
 
 		}
 		else if(this.data[i].type == 2){
@@ -191,10 +206,10 @@ myResult.prototype.init = function() {
 				this.outTime += this.data[i].duration;
 				this.outNum ++;
 			}
-			else{
-				this.sacTime += this.data[i].duration;
-				this.sacNum ++;
-			}
+			
+			this.sacTime += this.data[i].duration;
+			this.sacNum ++;
+			
 		}
 		this.totalTime += this.data[i].duration;
 		this.totalNum ++;
@@ -238,10 +253,7 @@ myResult.prototype.ui = function() {
 
 	$(".dataArea").css("width", this.picWidth).css("height", this.picHeight);
 
-	canvas = oCanvas.create({
-		canvas: "#canvas",
-		fps: 10
-	});
+
 
 /*
 	if(window.devicePixelRatio == 2) {
@@ -257,7 +269,7 @@ myResult.prototype.ui = function() {
 
 	$(".timeline").css("width", controlWidth + "px");
 
-	$(".timeData.down .first").html("00:00:00");
+	$(".timeData.down .first").html("00:00.0");
 	var total = getTime(this.totalTime);
 	$(".timeData.down .last").html(total);
 	$(".down.first-frame").html("0");
@@ -309,73 +321,86 @@ myResult.prototype.ui = function() {
 }
 
 
-function getData(tester, experiment){
+function getData(tester, experiment, type){
 
 	var title = "data/" + tester + "-" + experiment;
 	var txtFile = title + ".txt";
 
 	var newData = [];
+	var type = type;
 	count ++;
 	$.get(txtFile, function(data) {
 
 		count --;
-
         var lines = data.split("\n");
+        if( type == 1 || type == 3 ){
+        	$.each(lines, function(n, elem) {
+	            
+	        	if(elem.substring(0,1) == 2 || elem.substring(0,1) == 1){
+	        		var arr = elem.split("\t");
 
-        $.each(lines, function(n, elem) {
+	        		if(arr[0] == 2){
+	        			newData.push( new myData(type, parseInt(arr[0]), parseFloat(arr[1]), parseInt(arr[2]), parseInt(arr[3]), parseInt(arr[4]), parseInt(arr[5]), parseInt(arr[6]), parseInt(arr[7]),
+	        				parseInt(arr[8]), parseInt(arr[9]), parseInt(arr[10]), parseInt(arr[11]), parseInt(arr[12]),
+	        				parseInt(arr[13]), parseInt(arr[14]), parseInt(arr[15]), parseInt(arr[16]), parseInt(arr[17]), parseInt(arr[18]), parseInt(arr[19]), parseInt(arr[20])) );
+	        		}
+	        		else if(arr[0] == 1){
+	        			newData.push( new myData(type, parseInt(arr[0]), parseFloat(arr[1]), parseInt(arr[2]), parseInt(arr[3]), parseInt(arr[4]), parseInt(arr[5]), parseInt(arr[6]), parseInt(arr[7]),
+	        				parseInt(arr[8]), parseInt(arr[9]), parseInt(arr[10]), parseInt(arr[11]), parseInt(arr[12]),
+	        				parseInt(arr[13]), parseInt(arr[14]), parseInt(arr[15])) );
+	        		}
+	        	}
+
+	        	if(n>=2){
+	        		
+	        		var num = n-1;
+	        		var index = n-2;
+
+	                // fix & fix
+	                if(newData[num].type == 1 && newData[index].type == 1){
+	                    
+	                    // nothing
+	                }
+	                // sac & fix || sac & sac
+	                else if((newData[num].type == 1 && newData[index].type == 2)
+	                     || (newData[num].type == 2 && newData[index].type == 2)){
+	                    
+	                    var x = parseInt((newData[index].endX + newData[num].startX) / 2);
+	                    var y = parseInt((newData[index].endY + newData[num].startY) / 2);
+
+	                    newData[index].endX = x;
+	                    newData[index].endY = y;
+	                    newData[num].startX = x;
+	                    newData[num].startY = y;
+	                }
+	                // fix & sac
+	                else if(newData[num].type == 2 && newData[index].type == 1){
+	                    
+	                    var x = parseInt((newData[index].startX + newData[num].startX) / 2);
+	                    var y = parseInt((newData[index].startY + newData[num].startY) / 2);
+
+	                    newData[index].startX = x;
+	                    newData[index].startY = y;
+	                    newData[num].startX = x;
+	                    newData[num].startY = y;
+	                }
+	            }
+
+
+	        });
+        }
+        else if(type == 2){
+
+        	$.each(lines, function(n, elem) {
             
-        	if(elem.substring(0,1) == 2 || elem.substring(0,1) == 1){
-        		var arr = elem.split("\t");
+		        if(elem.substring(0,1) == 2 || elem.substring(0,1) == 1){
+		    		var arr = elem.split("\t");
+		    		newData.push( new myData(type, parseInt(arr[0]), parseFloat(arr[1]), parseInt(arr[2]) ));
+		    	}
+		    });
 
-        		if(arr[0] == 2){
-        			newData.push( new myData(parseInt(arr[0]), parseFloat(arr[1]), parseInt(arr[2]), parseInt(arr[3]), parseInt(arr[4]), parseInt(arr[5]), parseInt(arr[6]), parseInt(arr[7]),
-        				parseInt(arr[8]), parseInt(arr[9]), parseInt(arr[10]), parseInt(arr[11]), parseInt(arr[12]),
-        				parseInt(arr[13]), parseInt(arr[14]), parseInt(arr[15]), parseInt(arr[16])) );
-        		}
-        		else if(arr[0] == 1){
-        			newData.push( new myData(parseInt(arr[0]), parseFloat(arr[1]), parseInt(arr[2]), parseInt(arr[3]), parseInt(arr[4]), parseInt(arr[5]), parseInt(arr[6]), parseInt(arr[7]),
-        				parseInt(arr[8]), parseInt(arr[9]), parseInt(arr[10]), parseInt(arr[11]), parseInt(arr[12]),
-        				parseInt(arr[13])) );
-        		}
-        	}
-
-        	if(n>=2){
-        		
-        		var num = n-1;
-        		var index = n-2;
-
-                // fix & fix
-                if(newData[num].type == 1 && newData[index].type == 1){
-                    
-                    // nothing
-                }
-                // sac & fix || sac & sac
-                else if((newData[num].type == 1 && newData[index].type == 2)
-                     || (newData[num].type == 2 && newData[index].type == 2)){
-                    
-                    var x = parseInt((newData[index].endX + newData[num].startX) / 2);
-                    var y = parseInt((newData[index].endY + newData[num].startY) / 2);
-
-                    newData[index].endX = x;
-                    newData[index].endY = y;
-                    newData[num].startX = x;
-                    newData[num].startY = y;
-                }
-                // fix & sac
-                else if(newData[num].type == 2 && newData[index].type == 1){
-                    
-                    var x = parseInt((newData[index].startX + newData[num].startX) / 2);
-                    var y = parseInt((newData[index].startY + newData[num].startY) / 2);
-
-                    newData[index].startX = x;
-                    newData[index].startY = y;
-                    newData[num].startX = x;
-                    newData[num].startY = y;
-                }
-            }
-
-
-        });
+        }
+	        
 		
 		eyeData[tester][experiment] = newData;
 		if(count == 0){
@@ -398,18 +423,17 @@ function getData(tester, experiment){
     });
 }
 
+
 function getTime(item){
 
 	var minute = parseInt(item/60);
 	var second = parseInt(item%60);
-	var misecond = parseInt( (item - parseInt(item)) * 60 );
+	var misecond = parseInt( (item - parseInt(item)) * 10 );
 
 	if(minute < 10)
 		minute = "0" + minute;
 	if(second < 10)
 		second = "0" + second;
-	if(misecond < 10)
-		misecond = "0" +  misecond;
 
-	return minute + ":" + second + ":" + misecond;
+	return minute + ":" + second + "." + misecond;
 }
